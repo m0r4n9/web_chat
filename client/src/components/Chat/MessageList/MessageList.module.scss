@@ -1,0 +1,16 @@
+.wrapper {
+  display: block;
+  overflow-y: scroll;
+  height: 470px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 14px;
+}
+
+//.wrapper::-webkit-scrollbar {
+//  display: none;
+//}
