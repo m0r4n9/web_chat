@@ -1,3 +1,5 @@
+import { ErrorInterface } from '@/types/Error.ts';
+
 export interface User {
     id: string;
     username: string;
@@ -7,5 +9,5 @@ export interface User {
 export interface UserSchema {
     isLoading: boolean;
     user?: User;
-    _inited: boolean;
+    error?: ErrorInterface;
 }

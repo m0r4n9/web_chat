@@ -1,17 +1,19 @@
-import * as React from 'react';
 import { Box, Button, Modal, Stack } from '@mui/material';
-import { useGetUsersQuery } from '@/store/api/userApi.ts';
-import { ColorAvatar } from '../ColorAvatar';
-import { useNavigate } from 'react-router-dom';
-import { useCreateChatMutation } from '@/store/api/chatApi';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { getUserId } from '@/store/slice/User/user-selector.ts';
+import { useNavigate } from 'react-router-dom';
+
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useCreateChatMutation } from '@/store/api/chatApi';
+import { useGetUsersQuery } from '@/store/api/userApi.ts';
 import { contactActions } from '@/store/slice/Contacts/contactsSlice.ts';
-import { Contact } from '@/store/slice/Contacts/types.ts';
+import { User } from '@/store/slice/User/types.ts';
+import { getUserId } from '@/store/slice/User/user-selector.ts';
+
+import { ColorAvatar } from '../ColorAvatar';
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -23,7 +25,9 @@ const style = {
     overflow: 'hidden',
 };
 
-const ModalUsers = ({ users }: { users?: any[] }) => {
+type PickUser = Pick<User, 'id' | 'username'>;
+
+const ModalUsers = ({ users }: { users?: PickUser[] }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [open, setOpen] = React.useState(false);
@@ -32,7 +36,7 @@ const ModalUsers = ({ users }: { users?: any[] }) => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleStartChat = async (user: Contact) => {
+    const handleStartChat = async (user: PickUser) => {
         try {
             let currentUserId = null;
             if (localStorage.getItem('user')) {
@@ -63,17 +67,17 @@ const ModalUsers = ({ users }: { users?: any[] }) => {
             <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby='modal-modal-title'
+                aria-describedby='modal-modal-description'
             >
                 <Box sx={style}>
                     <h2>Выберите пользователя</h2>
                     <Stack spacing={1}>
                         {users?.map((user) => (
                             <Stack
-                                key={user.userId}
-                                direction="row"
-                                justifyContent="space-between"
+                                key={user.id}
+                                direction='row'
+                                justifyContent='space-between'
                             >
                                 <ColorAvatar username={user.username} />
                                 <span>{user.username}</span>
@@ -95,8 +99,8 @@ export const CreateChat = () => {
 
     return (
         <Stack
-            alignContent="center"
-            alignItems="center"
+            alignContent='center'
+            alignItems='center'
             style={{ width: '100%', height: '100%' }}
         >
             <h1>Выберите чат</h1>

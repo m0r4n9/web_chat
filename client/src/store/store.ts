@@ -1,10 +1,12 @@
 import { configureStore, ReducersMapObject } from '@reduxjs/toolkit';
-import { usersApi } from './api/userApi.ts';
-import { chatApi } from './api/chatApi.ts';
-import { StateSchema, ThunkExtraArg } from './StateSchema.ts';
-import { userReducer } from './slice/User/userSlice.ts';
+
 import { $api } from '@/api/api.ts';
 import { contactReducer } from '@/store/slice/Contacts/contactsSlice.ts';
+
+import { chatApi } from './api/chatApi.ts';
+import { usersApi } from './api/userApi.ts';
+import { userReducer } from './slice/User/userSlice.ts';
+import { StateSchema, ThunkExtraArg } from './StateSchema.ts';
 
 export function createReduxStore() {
     const rootReducer: ReducersMapObject<StateSchema> = {

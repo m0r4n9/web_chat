@@ -1,7 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkConfig } from '@/store';
-import { User } from '../types.ts';
 import { AxiosError, isAxiosError } from 'axios';
+
+import { ThunkConfig } from '@/store';
+import { ErrorInterface } from '@/types/Error.ts';
+
+import { User } from '../types.ts';
 
 interface authUserParams {
     email: string;
@@ -11,10 +14,7 @@ interface authUserParams {
 export const authUser = createAsyncThunk<
     User,
     authUserParams,
-    ThunkConfig<{
-        message?: string;
-        errors?: string[];
-    }>
+    ThunkConfig<ErrorInterface>
 >('user/AuthUser', async (data, thunkAPI) => {
     const { extra, rejectWithValue } = thunkAPI;
 

@@ -1,8 +1,13 @@
-const { Chat, ChatMember } = require('../models');
 const { Op } = require('sequelize');
+const { Chat, ChatMember } = require('../models');
+const ApiError = require('../exceptions/api-error');
 
 class ChatService {
     async createChat(currentUserId, userId) {
+        if (!currentUserChatIds || !userId) {
+            throw new ApiError.BadRequest('Данные неполные');
+        }
+
         const currentUserChats = await ChatMember.findAll({
             where: {
                 userId: currentUserId,

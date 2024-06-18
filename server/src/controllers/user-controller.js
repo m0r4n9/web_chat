@@ -32,7 +32,10 @@ class UserController {
                 password,
                 username,
             );
-            return res.json(user);
+            return res.json({
+                id: user.id,
+                ...user,
+            });
         } catch (error) {
             next(error);
         }

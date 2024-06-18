@@ -1,7 +1,8 @@
-import cls from './MessageInput.module.scss';
-import { Button, Stack, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { Button, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
+
+import cls from './MessageInput.module.scss';
 
 interface MessageInputProps {
     sendMessage: (newMessage: string) => void;
@@ -12,18 +13,18 @@ export const MessageInput = ({ sendMessage }: MessageInputProps) => {
 
     return (
         <Stack
-            direction="row"
-            alignItems="center"
+            direction='row'
+            alignItems='center'
             spacing={1}
             className={cls.messageInput}
         >
             <TextField
                 fullWidth
-                id="outlined-multiline-flexible"
+                id='outlined-multiline-flexible'
                 multiline
-                variant="filled"
-                size="small"
-                placeholder="Введите сообщение..."
+                variant='filled'
+                size='small'
+                placeholder='Введите сообщение...'
                 maxRows={4}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}

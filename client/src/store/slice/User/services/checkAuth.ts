@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosError, isAxiosError } from 'axios';
+
 import { ThunkConfig } from '../../../StateSchema';
 import { User } from '../types';
-import { AxiosError, isAxiosError } from 'axios';
 
 export const checkAuth = createAsyncThunk<
     User,

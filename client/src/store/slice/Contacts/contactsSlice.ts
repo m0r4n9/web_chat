@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Contact, ContactsSchema } from './types';
+
 import { fetchContacts } from '@/store/slice/Contacts/services/fetchContacts.ts';
+
+import { Contact, ContactsSchema } from './types';
 
 const initialState: ContactsSchema = {
     isLoading: false,

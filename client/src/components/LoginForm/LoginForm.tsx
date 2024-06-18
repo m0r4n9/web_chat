@@ -1,12 +1,16 @@
-import { useState } from 'react';
 import { Button, Paper, Stack } from '@mui/material';
-import { ControllerInput } from '../ui/ContollerInput';
-import cls from './LoginForm.module.scss';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getAuthError } from '@/store';
 import { authUser } from '@/store/slice/User/services/authUser.ts';
 import { registerUser } from '@/store/slice/User/services/registerUser.ts';
-import { useNavigate } from 'react-router-dom';
+
+import { ControllerInput } from '../ui/ContollerInput';
+import cls from './LoginForm.module.scss';
 
 type AuthInputs = {
     email: string;
@@ -18,6 +22,7 @@ export const LoginForm = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const error = useSelector(getAuthError);
 
     const {
         handleSubmit,
@@ -56,19 +61,19 @@ export const LoginForm = () => {
             <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
                 <Stack spacing={1}>
                     <ControllerInput
-                        name="email"
+                        name='email'
                         control={control}
-                        label="Email"
+                        label='Email'
                     />
                     {errors.email && <span>{errors.email.message}</span>}
                 </Stack>
 
                 <Stack>
                     <ControllerInput
-                        name="password"
-                        type="password"
+                        name='password'
+                        type='password'
                         control={control}
-                        label="Пароль"
+                        label='Пароль'
                     />
                     {errors.password && <span>{errors.password.message}</span>}
                 </Stack>
@@ -76,9 +81,9 @@ export const LoginForm = () => {
                 {isRegistering && (
                     <Stack>
                         <ControllerInput
-                            name="username"
+                            name='username'
                             control={control}
-                            label="Имя пользователя"
+                            label='Имя пользователя'
                         />
                         {errors.username && (
                             <span>{errors.username.message}</span>
@@ -86,11 +91,12 @@ export const LoginForm = () => {
                     </Stack>
                 )}
 
-                <Stack spacing={2} direction="column">
-                    <Button type="submit" variant="contained">
+                <Stack spacing={2} direction='column'>
+                    <span>{error?.message}</span>
+                    <Button type='submit' variant='contained'>
                         {isRegistering ? 'Зарегистрироваться' : 'Войти'}
                     </Button>
-                    <Button type="button" onClick={toggleMode}>
+                    <Button type='button' onClick={toggleMode}>
                         {isRegistering
                             ? 'Перейти к авторизации'
                             : 'Перейти к регистрации'}

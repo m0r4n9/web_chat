@@ -1,11 +1,13 @@
-import cls from './ChatNavigation.module.scss';
-import { Link, useParams } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { getContacts, fetchContacts, getUserId } from '@/store';
+import { Link, useParams } from 'react-router-dom';
+
 import { ContactItem } from '@/components/ChatNavigation';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { fetchContacts, getContacts, getUserId } from '@/store';
+
+import cls from './ChatNavigation.module.scss';
 
 export const ChatNavigation = () => {
     const { chatId } = useParams();
@@ -20,13 +22,17 @@ export const ChatNavigation = () => {
 
     return (
         <div className={cls.ChatNavigation}>
-            <Link to="/" className={cls.mainLink}>
+            <Link to='/' className={cls.mainLwink}>
                 Чаты
             </Link>
 
             <Stack spacing={2} className={cls.contactsList}>
                 {contacts?.map((contact) => (
-                    <ContactItem contact={contact} chatId={Number(chatId)} />
+                    <ContactItem
+                        key={contact.id}
+                        contact={contact}
+                        chatId={Number(chatId)}
+                    />
                 ))}
             </Stack>
         </div>

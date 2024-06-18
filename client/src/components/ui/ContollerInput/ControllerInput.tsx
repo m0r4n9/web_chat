@@ -21,14 +21,14 @@ export const ControllerInput = ({
             render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <TextField
                     helperText={error ? error.message : null}
-                    size="small"
+                    size='small'
                     error={!!error}
                     onChange={onChange}
                     type={type}
                     value={value}
                     fullWidth
                     label={label}
-                    variant="outlined"
+                    variant='outlined'
                 />
             )}
         />

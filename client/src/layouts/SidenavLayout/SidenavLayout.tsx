@@ -1,7 +1,8 @@
-import { Outlet, useNavigate } from 'react-router-dom';
 import { Button, Divider, Stack } from '@mui/material';
-import { ChatNavigation } from '@/components/ChatNavigation';
 import { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+
+import { ChatNavigation } from '@/components/ChatNavigation';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { checkAuth } from '@/store/slice/User/services/checkAuth.ts';
 
@@ -25,16 +26,16 @@ export const SidenavLayout = () => {
     };
 
     return (
-        <div className="main">
+        <div className='main'>
             <h1>Online-web Chat</h1>
             <Button onClick={onLogout}>Выйти из аккаунта</Button>
             <Stack
-                direction="row"
+                direction='row'
                 spacing={2}
-                alignItems="stretch"
-                className="wrapper"
+                alignItems='stretch'
+                className='wrapper'
                 style={{ marginTop: 20 }}
-                divider={<Divider orientation="vertical" flexItem />}
+                divider={<Divider orientation='vertical' flexItem />}
             >
                 <ChatNavigation />
                 <Outlet />

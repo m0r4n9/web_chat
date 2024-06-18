@@ -7,6 +7,7 @@ const { Server } = require('socket.io');
 
 const sequelize = require('./db');
 const router = require('./routes/regular');
+const errorHandler = require('./middlewares/error-middleware');
 const { Message } = require('./models');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(
 );
 
 app.use('/api', router);
+app.use(errorHandler);
 
 io.on('connection', (socket) => {
     console.log('a user connected');

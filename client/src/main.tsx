@@ -1,11 +1,14 @@
-import ReactDOM from 'react-dom/client';
 import './index.css';
 import './App.css';
+
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 import { SidenavLayout } from '@/layouts/SidenavLayout';
+import { ChatPage } from '@/pages/ChatPage';
+
 import { LoginPage } from './pages/LoginPage';
 import { StoreProvider } from './store';
-import { ChatPage } from '@/pages/ChatPage';
 
 const router = createBrowserRouter([
     {

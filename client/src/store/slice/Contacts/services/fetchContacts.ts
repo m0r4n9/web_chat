@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosError, isAxiosError } from 'axios';
+
 import { ThunkConfig } from '../../../StateSchema';
 import { Contact } from '../types';
-import { AxiosError, isAxiosError } from 'axios';
 
 export const fetchContacts = createAsyncThunk<
     Contact[],

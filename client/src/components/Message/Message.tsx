@@ -1,5 +1,6 @@
-import cls from './Message.module.scss';
 import clsx from 'clsx';
+
+import cls from './Message.module.scss';
 
 interface MessageProps {
     message: string;

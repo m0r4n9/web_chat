@@ -1,10 +1,12 @@
-import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { $api } from '@/api/api.ts';
-import { io } from 'socket.io-client';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useSelector } from 'react-redux';
-import { getUserData, getUserId, getContacts, contactActions } from '@/store';
+import { io } from 'socket.io-client';
+
+import { $api } from '@/api/api.ts';
+import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { contactActions, getContacts, getUserData, getUserId } from '@/store';
+
 import { MessageInput } from '../MessageInput/MessageInput.tsx';
 
 interface Message {

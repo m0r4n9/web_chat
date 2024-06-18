@@ -1,8 +1,10 @@
 import { AxiosInstance } from 'axios';
+
+import { ContactsSchema } from '@/store/slice/Contacts/types.ts';
+
+import { chatApi } from './api/chatApi';
 import { usersApi } from './api/userApi';
 import { UserSchema } from './slice/User/types';
-import { chatApi } from './api/chatApi';
-import { ContactsSchema } from '@/store/slice/Contacts/types.ts';
 
 export interface StateSchema {
     user: UserSchema;

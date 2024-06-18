@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
-import cls from './MessageList.module.scss';
+
 import { Message } from '@/components/Message';
+
+import cls from './MessageList.module.scss';
 
 interface Message {
     senderId: number;
