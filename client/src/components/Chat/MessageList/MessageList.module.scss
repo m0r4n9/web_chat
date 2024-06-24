@@ -2,7 +2,10 @@
   display: block;
   overflow-y: scroll;
   height: 470px;
+
+  animation: appear 0.3s ease;
 }
+
 
 .list {
   display: flex;
@@ -11,6 +14,12 @@
   padding-right: 14px;
 }
 
-//.wrapper::-webkit-scrollbar {
-//  display: none;
-//}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

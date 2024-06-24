@@ -13,7 +13,11 @@ const initialState: UserSchema = {
 export const userSlice = createSlice({
     name: 'User',
     initialState,
-    reducers: {},
+    reducers: {
+        clearError: (state) => {
+            state.error = undefined;
+        },
+    },
     extraReducers: (builder) =>
         builder
             .addCase(authUser.pending, (state) => {

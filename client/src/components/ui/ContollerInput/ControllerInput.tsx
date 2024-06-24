@@ -1,28 +1,41 @@
 import { TextField } from '@mui/material';
-import { Controller } from 'react-hook-form';
+import {
+    Control,
+    Controller,
+    FieldPath,
+    FieldValues,
+    RegisterOptions,
+    UseControllerProps,
+} from 'react-hook-form';
 
-interface ControllerInputProps {
-    name: string;
-    control: any;
+interface FormInputControllerProps<T extends FieldValues>
+    extends UseControllerProps<T> {
+    name: FieldPath<T>;
+    control: Control<T>;
+    defaultValue?: T[keyof T];
     label: string;
     type?: string;
+    rules?: RegisterOptions;
+    placeholder?: string;
 }
 
-export const ControllerInput = ({
+export const ControllerInput = <T extends FieldValues>({
     name,
     control,
+    rules,
+    type,
     label,
-    type = 'text',
-}: ControllerInputProps) => {
+}: FormInputControllerProps<T>) => {
     return (
         <Controller
             name={name}
             control={control}
+            rules={rules}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <TextField
                     helperText={error ? error.message : null}
                     size='small'
-                    error={!!error}
+                    error={Boolean(error)}
                     onChange={onChange}
                     type={type}
                     value={value}

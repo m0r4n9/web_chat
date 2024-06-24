@@ -18,23 +18,17 @@ export const MessageList = ({
     messages: Message[];
     userId: number;
 }) => {
-    const messageEl = useRef(null);
+    const messagesElement = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (messageEl && messageEl.current) {
-            // @ts-ignore
-            messageEl.current.addEventListener('DOMNodeInserted', (event) => {
-                const { currentTarget: target } = event;
-                target?.scroll({
-                    top: target.scrollHeight,
-                    behavior: 'smooth',
-                });
-            });
+        if (messagesElement.current) {
+            messagesElement.current.scrollTop =
+                messagesElement.current.scrollHeight;
         }
-    }, []);
+    }, [messages]);
 
     return (
-        <div className={cls.wrapper} ref={messageEl}>
+        <div className={cls.wrapper} ref={messagesElement}>
             <div className={cls.list}>
                 {messages.map((message, index) => (
                     <Message

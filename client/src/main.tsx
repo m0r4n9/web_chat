@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { SidenavLayout } from '@/layouts/SidenavLayout';
 import { ChatPage } from '@/pages/ChatPage';
+import { StartPage } from '@/pages/StartPage';
+import { MaterialThemeProvider } from '@/providers';
 
 import { LoginPage } from './pages/LoginPage';
 import { StoreProvider } from './store';
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <ChatPage />,
+                element: <StartPage />,
             },
             {
                 path: '/:chatId',
@@ -32,6 +34,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <StoreProvider>
-        <RouterProvider router={router} />
+        <MaterialThemeProvider>
+            <RouterProvider router={router} />
+        </MaterialThemeProvider>
     </StoreProvider>,
 );

@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getAuthError } from '@/store';
 import { authUser } from '@/store/slice/User/services/authUser.ts';
 import { registerUser } from '@/store/slice/User/services/registerUser.ts';
+import { userActions } from '@/store/slice/User/userSlice.ts';
 
 import { ControllerInput } from '../ui/ContollerInput';
 import cls from './LoginForm.module.scss';
@@ -19,16 +20,12 @@ type AuthInputs = {
 };
 
 export const LoginForm = () => {
-    const [isRegistering, setIsRegistering] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const error = useSelector(getAuthError);
+    const [isRegistering, setIsRegistering] = useState(false);
 
-    const {
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm<AuthInputs>({
+    const { handleSubmit, control } = useForm<AuthInputs>({
         defaultValues: {
             email: '',
             password: '',
@@ -53,42 +50,41 @@ export const LoginForm = () => {
     };
 
     const toggleMode = () => {
+        if (error) dispatch(userActions.clearError());
         setIsRegistering((prev) => !prev);
     };
 
     return (
-        <Paper elevation={2} className={cls.wrapper}>
+        <Paper elevation={1} className={cls.wrapper}>
             <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
-                <Stack spacing={1}>
-                    <ControllerInput
-                        name='email'
-                        control={control}
-                        label='Email'
-                    />
-                    {errors.email && <span>{errors.email.message}</span>}
-                </Stack>
+                <ControllerInput
+                    name='email'
+                    control={control}
+                    label='Электронная почта'
+                    rules={{ required: 'Это поле обязательно' }}
+                />
 
-                <Stack>
-                    <ControllerInput
-                        name='password'
-                        type='password'
-                        control={control}
-                        label='Пароль'
-                    />
-                    {errors.password && <span>{errors.password.message}</span>}
-                </Stack>
-
+                <ControllerInput
+                    name='password'
+                    type='password'
+                    control={control}
+                    label='Пароль'
+                    rules={{ required: 'Это поле обязательно' }}
+                />
                 {isRegistering && (
-                    <Stack>
-                        <ControllerInput
-                            name='username'
-                            control={control}
-                            label='Имя пользователя'
-                        />
-                        {errors.username && (
-                            <span>{errors.username.message}</span>
-                        )}
-                    </Stack>
+                    <ControllerInput
+                        name='username'
+                        control={control}
+                        label='Имя пользователя'
+                        rules={{
+                            required: 'Это поле обязательно',
+                            minLength: {
+                                value: 4,
+                                message:
+                                    'Имя пользователя должно содержать минимум 4 символа',
+                            },
+                        }}
+                    />
                 )}
 
                 <Stack spacing={2} direction='column'>
@@ -98,8 +94,8 @@ export const LoginForm = () => {
                     </Button>
                     <Button type='button' onClick={toggleMode}>
                         {isRegistering
-                            ? 'Перейти к авторизации'
-                            : 'Перейти к регистрации'}
+                            ? 'Есть аккаунт? Войти'
+                            : 'Нет аккаунта? Зарегистрироваться'}
                     </Button>
                 </Stack>
             </form>
