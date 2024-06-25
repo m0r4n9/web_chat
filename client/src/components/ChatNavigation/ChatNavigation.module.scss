@@ -1,5 +1,7 @@
 .ChatNavigation {
-  min-width: 200px;
+  min-width: 250px;
+  max-height: 600px;
+  overflow: hidden;
 }
 
 .item {
@@ -13,13 +15,26 @@
 }
 
 .contactsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-top: 14px;
-  max-height: 600px;
-  overflow-y: scroll;
 }
 
-.mainLink {
+.homeLink {
   font-size: 2rem;
   color: inherit;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  
+  &:hover {
+    color: inherit;
+    opacity: 0.8;
+  }
+}
 
+.scrollContainer {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }

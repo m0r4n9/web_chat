@@ -9,7 +9,12 @@ interface MessageInputProps {
 }
 
 export const MessageInput = ({ sendMessage }: MessageInputProps) => {
-    const [newMessage, setNewMessage] = useState<string>('');
+    const [message, setMessage] = useState('');
+
+    const sendMessageHandler = () => {
+        sendMessage(message);
+        setMessage('');
+    };
 
     return (
         <Stack
@@ -26,17 +31,12 @@ export const MessageInput = ({ sendMessage }: MessageInputProps) => {
                 size='small'
                 placeholder='Введите сообщение...'
                 maxRows={4}
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                inputProps={{
-                    className: cls.input,
-                }}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
             />
             <Button
-                onClick={() => {
-                    sendMessage(newMessage);
-                    setNewMessage('');
-                }}
+                onClick={sendMessageHandler}
+                disabled={!message}
             >
                 <SendIcon />
             </Button>

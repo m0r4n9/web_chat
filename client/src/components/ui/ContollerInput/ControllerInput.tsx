@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import { HTMLInputTypeAttribute } from 'react';
 import {
     Control,
     Controller,
@@ -8,14 +9,17 @@ import {
     UseControllerProps,
 } from 'react-hook-form';
 
+type TextFieldVariants = 'outlined' | 'filled' | 'standard';
+
 interface FormInputControllerProps<T extends FieldValues>
     extends UseControllerProps<T> {
     name: FieldPath<T>;
     control: Control<T>;
     defaultValue?: T[keyof T];
-    label: string;
-    type?: string;
+    type?: HTMLInputTypeAttribute;
+    inputVariant?: TextFieldVariants;
     rules?: RegisterOptions;
+    label: string;
     placeholder?: string;
 }
 
@@ -25,6 +29,7 @@ export const ControllerInput = <T extends FieldValues>({
     rules,
     type,
     label,
+    inputVariant = 'outlined',
 }: FormInputControllerProps<T>) => {
     return (
         <Controller
@@ -41,7 +46,7 @@ export const ControllerInput = <T extends FieldValues>({
                     value={value}
                     fullWidth
                     label={label}
-                    variant='outlined'
+                    variant={inputVariant}
                 />
             )}
         />

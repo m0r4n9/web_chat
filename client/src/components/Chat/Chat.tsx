@@ -7,7 +7,8 @@ import { $api } from '@/api/api.ts';
 import { MessageInput } from '@/components/Chat/MessageInput/MessageInput.tsx';
 import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { contactActions, getContacts, getUserData, getUserId } from '@/store';
+import { contactActions, getContacts } from '@/store/slice/Contacts';
+import { getUserData, getUserId } from '@/store/slice/User';
 
 import { Message } from '../Message';
 import cls from './Chat.module.scss';
@@ -30,6 +31,8 @@ const MessagesSkeleton = () => {
         </div>
     );
 };
+
+const SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL;
 
 export const Chat = ({ chatId }: { chatId: string }) => {
     const dispatch = useAppDispatch();
@@ -55,10 +58,7 @@ export const Chat = ({ chatId }: { chatId: string }) => {
     }, [chatId]);
 
     useEffect(() => {
-        if (socket.current) return;
-        socket.current = io(import.meta.env.DEV_API_URL, {
-            transports: ['websocket'],
-        });
+        socket.current = io(SERVER_URL);
 
         socket.current.on('message', (message: Message) => {
             if (chatId === message.chatId.toString()) {

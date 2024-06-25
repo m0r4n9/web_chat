@@ -5,10 +5,12 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { getAuthError } from '@/store';
-import { authUser } from '@/store/slice/User/services/authUser.ts';
-import { registerUser } from '@/store/slice/User/services/registerUser.ts';
-import { userActions } from '@/store/slice/User/userSlice.ts';
+import {
+    authUser,
+    getAuthError,
+    registerUser,
+    userActions,
+} from '@/store/slice/User';
 
 import { ControllerInput } from '../ui/ContollerInput';
 import cls from './LoginForm.module.scss';
@@ -25,7 +27,7 @@ export const LoginForm = () => {
     const error = useSelector(getAuthError);
     const [isRegistering, setIsRegistering] = useState(false);
 
-    const { handleSubmit, control } = useForm<AuthInputs>({
+    const { handleSubmit, control, clearErrors } = useForm<AuthInputs>({
         defaultValues: {
             email: '',
             password: '',
@@ -36,21 +38,18 @@ export const LoginForm = () => {
     const onSubmit: SubmitHandler<AuthInputs> = (data) => {
         if (isRegistering) {
             dispatch(registerUser(data)).then((res) => {
-                if (res.meta.requestStatus === 'fulfilled') {
-                    navigate('/');
-                }
+                if (res.meta.requestStatus === 'fulfilled') navigate('/');
             });
         } else {
             dispatch(authUser(data)).then((res) => {
-                if (res.meta.requestStatus === 'fulfilled') {
-                    navigate('/');
-                }
+                if (res.meta.requestStatus === 'fulfilled') navigate('/');
             });
         }
     };
 
     const toggleMode = () => {
         if (error) dispatch(userActions.clearError());
+        clearErrors();
         setIsRegistering((prev) => !prev);
     };
 

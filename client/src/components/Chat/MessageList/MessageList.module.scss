@@ -1,6 +1,7 @@
 .wrapper {
   display: block;
   overflow-y: scroll;
+  scrollbar-width: thin;
   height: 470px;
 
   animation: appear 0.3s ease;
