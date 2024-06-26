@@ -16,6 +16,13 @@ export const MessageInput = ({ sendMessage }: MessageInputProps) => {
         setMessage('');
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessageHandler();
+        }
+    };
+
     return (
         <Stack
             direction='row'
@@ -27,17 +34,14 @@ export const MessageInput = ({ sendMessage }: MessageInputProps) => {
                 fullWidth
                 id='outlined-multiline-flexible'
                 multiline
-                variant='filled'
                 size='small'
                 placeholder='Введите сообщение...'
-                maxRows={4}
+                maxRows={5}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
-            <Button
-                onClick={sendMessageHandler}
-                disabled={!message}
-            >
+            <Button onClick={sendMessageHandler} disabled={!message}>
                 <SendIcon />
             </Button>
         </Stack>

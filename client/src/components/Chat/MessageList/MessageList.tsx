@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Message } from '@/components/Message';
 
 import cls from './MessageList.module.scss';
+import { Stack } from '@mui/material';
 
 interface Message {
     senderId: number;
@@ -29,7 +30,7 @@ export const MessageList = ({
 
     return (
         <div className={cls.wrapper} ref={messagesElement}>
-            <div className={cls.list}>
+            <Stack spacing={1} className={cls.list}>
                 {messages.map((message, index) => (
                     <Message
                         key={`${index}-${message.senderId}`}
@@ -37,7 +38,7 @@ export const MessageList = ({
                         isMine={userId === message.senderId}
                     />
                 ))}
-            </div>
+            </Stack>
         </div>
     );
 };

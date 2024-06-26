@@ -1,4 +1,3 @@
-import { Skeleton } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io, Socket } from 'socket.io-client';
@@ -6,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { $api } from '@/api/api.ts';
 import { MessageInput } from '@/components/Chat/MessageInput/MessageInput.tsx';
 import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
+import { MessagesSkeleton } from '@/components/Skeletons';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { contactActions, getContacts } from '@/store/slice/Contacts';
 import { getUserData, getUserId } from '@/store/slice/User';
@@ -20,18 +20,6 @@ interface Message {
     username?: string;
 }
 
-const MessagesSkeleton = () => {
-    return (
-        <div className={cls.list}>
-            <Skeleton animation='wave' height={48} width={140} />
-            <Skeleton animation='wave' height={48} width={140} />
-            <Skeleton animation='wave' height={48} width={140} />
-            <Skeleton animation='wave' height={48} width={140} />
-            <Skeleton animation='wave' height={48} width={140} />
-        </div>
-    );
-};
-
 const SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL;
 
 export const Chat = ({ chatId }: { chatId: string }) => {
@@ -41,17 +29,21 @@ export const Chat = ({ chatId }: { chatId: string }) => {
     const contacts = useSelector(getContacts);
     const [messages, setMessages] = useState<Message[]>([]);
     const [error, setError] = useState();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const socket = useRef<Socket | null>(null);
 
     useEffect(() => {
         async function fetchMessages() {
             setIsLoading(true);
-            await $api
-                .get(`/messages/${chatId}`)
-                .then((response) => setMessages(response.data))
-                .catch((error) => setError(error))
-                .finally(() => setIsLoading(false));
+            await new Promise(() => {
+                setTimeout(async () => {
+                    await $api
+                        .get(`/messages/${chatId}`)
+                        .then((response) => setMessages(response.data))
+                        .catch((error) => setError(error))
+                        .finally(() => setIsLoading(false));
+                }, 400);
+            });
         }
 
         fetchMessages();
@@ -89,6 +81,7 @@ export const Chat = ({ chatId }: { chatId: string }) => {
 
     const sendMessage = useCallback(
         (newMessage: string) => {
+            console.log(newMessage);
             if (newMessage.trim()) {
                 socket.current?.emit('message', {
                     chatId: chatId,

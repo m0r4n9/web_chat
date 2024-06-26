@@ -1,0 +1,10 @@
+.skeletonMessage {
+    display: inline;
+    align-self: start;
+    justify-self: start;
+  
+    &.isMine {
+      align-self: end;
+      justify-self: end;
+    }
+  }
