@@ -15,8 +15,8 @@ class UserController {
     async login(req, res, next) {
         try {
             const user = await userService.login(
-                req.body.data.email,
-                req.body.data.password,
+                req.body.email,
+                req.body.password,
             );
             return res.json(user);
         } catch (error) {
@@ -25,7 +25,7 @@ class UserController {
     }
 
     async registration(req, res, next) {
-        const { email, password, username } = req.body.data;
+        const { email, password, username } = req.body;
         try {
             const user = await userService.registration(
                 email,

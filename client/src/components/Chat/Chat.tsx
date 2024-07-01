@@ -1,108 +1,68 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { io, Socket } from 'socket.io-client';
 
-import { $api } from '@/api/api.ts';
-import { MessageInput } from '@/components/Chat/MessageInput/MessageInput.tsx';
 import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
-import { MessagesSkeleton } from '@/components/Skeletons';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { contactActions, getContacts } from '@/store/slice/Contacts';
-import { getUserData, getUserId } from '@/store/slice/User';
 
-import { Message } from '../Message';
 import cls from './Chat.module.scss';
 
-interface Message {
-    chatId: number;
-    senderId: number;
-    content: string;
-    username?: string;
-}
 
-const SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL;
+// const SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL;
 
 export const Chat = ({ chatId }: { chatId: string }) => {
-    const dispatch = useAppDispatch();
-    const userId = useSelector(getUserId);
-    const userData = useSelector(getUserData);
-    const contacts = useSelector(getContacts);
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [error, setError] = useState();
-    const [isLoading, setIsLoading] = useState(true);
-    const socket = useRef<Socket | null>(null);
+    // const dispatch = useAppDispatch();
+    // const userData = useSelector(getUserData);
+    // const contacts = useSelector(getContacts);
+    // const socket = useRef<Socket | null>(null);
 
-    useEffect(() => {
-        async function fetchMessages() {
-            setIsLoading(true);
-            await new Promise(() => {
-                setTimeout(async () => {
-                    await $api
-                        .get(`/messages/${chatId}`)
-                        .then((response) => setMessages(response.data))
-                        .catch((error) => setError(error))
-                        .finally(() => setIsLoading(false));
-                }, 400);
-            });
-        }
+    // useEffect(() => {
+    //     socket.current = io(SERVER_URL);
 
-        fetchMessages();
-    }, [chatId]);
+    //     socket.current.on('message', (message: Message) => {
+    //         if (chatId === message.chatId.toString()) {
+    //             setMessages((prevMessages) => [...prevMessages, message]);
+    //         } else {
+    //             if (
+    //                 message.senderId !== Number(userId) &&
+    //                 !contacts?.find(
+    //                     (contact) => contact.id == message.senderId.toString(),
+    //                 )
+    //             ) {
+    //                 dispatch(
+    //                     contactActions.addContact({
+    //                         chatId: message.chatId,
+    //                         id: message.senderId.toString(),
+    //                         username: message.username?.toString() ?? '123',
+    //                     }),
+    //                 );
+    //             }
+    //         }
+    //     });
 
-    useEffect(() => {
-        socket.current = io(SERVER_URL);
+    //     return () => {
+    //         if (socket.current && socket.current?.active)
+    //             socket.current?.disconnect();
+    //     };
+    // }, [chatId, userId, dispatch, contacts]);
 
-        socket.current.on('message', (message: Message) => {
-            if (chatId === message.chatId.toString()) {
-                setMessages((prevMessages) => [...prevMessages, message]);
-            } else {
-                if (
-                    message.senderId !== Number(userId) &&
-                    !contacts?.find(
-                        (contact) => contact.id == message.senderId.toString(),
-                    )
-                ) {
-                    dispatch(
-                        contactActions.addContact({
-                            chatId: message.chatId,
-                            id: message.senderId.toString(),
-                            username: message.username?.toString() ?? '123',
-                        }),
-                    );
-                }
-            }
-        });
-
-        return () => {
-            if (socket.current && socket.current?.active)
-                socket.current?.disconnect();
-        };
-    }, [chatId, userId, dispatch, contacts]);
-
-    const sendMessage = useCallback(
-        (newMessage: string) => {
-            console.log(newMessage);
-            if (newMessage.trim()) {
-                socket.current?.emit('message', {
-                    chatId: chatId,
-                    senderId: Number(userId),
-                    content: newMessage,
-                    username: userData?.username,
-                });
-            }
-        },
-        [chatId, userData?.username, userId],
-    );
+    // const sendMessage = useCallback(
+    //     (newMessage: string) => {
+    //         if (newMessage.trim()) {
+    //             socket.current?.emit('message', {
+    //                 chatId: chatId,
+    //                 senderId: Number(userId),
+    //                 content: newMessage,
+    //                 username: userData?.username,
+    //             });
+    //         }
+    //     },
+    //     [chatId, userData?.username, userId],
+    // );
 
     return (
         <div className={cls.Chat}>
-            {error && <h2>Ошибка: ${error}</h2>}
-            {isLoading ? (
-                <MessagesSkeleton />
-            ) : (
-                <MessageList messages={messages} userId={Number(userId)} />
-            )}
-            <MessageInput sendMessage={sendMessage} />
+                {/*<MessageList*/}
+                {/*    userId={Number(userId)}*/}
+                {/*    chatId={Number(chatId)}*/}
+                {/*/>*/}
+            {/* <MessageInput sendMessage={sendMessage} /> */}
         </div>
     );
 };

@@ -1,15 +1,15 @@
 const { Sequelize } = require('sequelize');
 
-module.exports = new Sequelize(
+// module.exports = new Sequelize('postgres://postgres:root@postgresqldb:5432/web_chat');
+
+const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
     process.env.DB_PASSWORD,
     {
-        dialect: 'postgres',
-        dialectOptions: {
-            searchPath: ['public'],
-        },
         host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
+        dialect: 'postgres',
     },
 );
+
+module.exports = sequelize;

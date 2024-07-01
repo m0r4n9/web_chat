@@ -1,6 +1,6 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Button, Stack, TextField } from '@mui/material';
-import { useState } from 'react';
+import { memo,useState } from 'react';
 
 import cls from './MessageInput.module.scss';
 
@@ -8,7 +8,7 @@ interface MessageInputProps {
     sendMessage: (newMessage: string) => void;
 }
 
-export const MessageInput = ({ sendMessage }: MessageInputProps) => {
+export const MessageInput = memo(({ sendMessage }: MessageInputProps) => {
     const [message, setMessage] = useState('');
 
     const sendMessageHandler = () => {
@@ -46,4 +46,4 @@ export const MessageInput = ({ sendMessage }: MessageInputProps) => {
             </Button>
         </Stack>
     );
-};
+});

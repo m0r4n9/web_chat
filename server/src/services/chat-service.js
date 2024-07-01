@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Chat, ChatMember } = require('../models');
+const { Chat, ChatMember, Message } = require('../models');
 const ApiError = require('../exceptions/api-error');
 
 class ChatService {
@@ -51,6 +51,39 @@ class ChatService {
         });
 
         return chatData.chatId;
+    }
+
+    async getMessages({chatId, page = 1}) {
+        const limit = 15;
+        const offset = (parseInt(page) - 1) * limit;
+
+        const chat = await Chat.findByPk(chatId);
+
+        if (!chat) {
+            throw ApiError.BadRequest('Чат не найден');
+        }
+
+        const totalMessages = await Message.count({
+            where: {
+                chatId,
+            }
+        });
+        const totalPages = Math.ceil(totalMessages / limit);
+
+        const messages = await Message.findAll({
+            limit,
+            offset,
+            where: {
+                chatId,
+            },
+            order: [['messageId', 'DESC']],
+        });
+
+        return {
+            data: messages.reverse(),
+            nextCursor: ++page,
+            isLastPage: page >= totalPages,
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 const chatService = require('../services/chat-service');
-const { User, ChatMember, Message } = require('../models');
+const { User, ChatMember } = require('../models');
 const { Op } = require('sequelize');
 
 class ChatController {
@@ -75,15 +75,14 @@ class ChatController {
         }
     }
 
-    async getChatData(req, res, next) {
+    async getMessages(req, res, next) {
         const chatId = req.params.chatId;
+        const { page = 1 } = req.query;
 
         try {
-            const messages = await Message.findAll({
-                where: {
-                    chatId,
-                },
-                order: [['messageId', 'ASC']],
+            const messages = await chatService.getMessages({
+                chatId,
+                page,
             });
             return res.json(messages);
         } catch (error) {

@@ -1,23 +1,16 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { ContactItem } from '@/components/ChatNavigation';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { fetchContacts, getContacts } from '@/store/slice/Contacts';
-import { getUserId } from '@/store/slice/User';
+import { UserContext } from '@/context/user';
+import { useGetContactsQuery } from '@/utils/api';
 
 import cls from './ChatNavigation.module.scss';
 
 export const ChatNavigation = () => {
     const { chatId } = useParams();
-    const contacts = useSelector(getContacts);
-    const userId = useSelector(getUserId);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (userId) dispatch(fetchContacts(userId));
-    }, [userId, dispatch]);
+    const { user } = useContext(UserContext);
+    const { data: contacts } = useGetContactsQuery(user.id);
 
     return (
         <div className={cls.ChatNavigation}>

@@ -1,29 +1,39 @@
 import { Button, Divider, Stack } from '@mui/material';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
+import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { checkAuth } from '@/store/slice/User/services/checkAuth.ts';
+import { UserContext } from '@/context/user';
 
 export const SidenavLayout = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+    const { setUser } = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const userId = localStorage.getItem('user');
+        const userId = localStorage.getItem('userId');
 
         if (userId) {
-            dispatch(checkAuth(userId));
-        } else {
-            navigate('/login');
+            const getUserData = async () => {
+                const response = await $api.get(`/user/refresh/${userId}`);
+                setUser(response.data);
+            };
+
+            getUserData();
         }
-    }, [dispatch, navigate]);
+        setIsLoading(false);
+
+    }, []);
 
     const onLogout = () => {
-        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
         navigate('/login');
     };
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className='main'>

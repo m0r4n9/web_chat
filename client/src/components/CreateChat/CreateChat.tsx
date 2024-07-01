@@ -1,14 +1,5 @@
 import { Box, Button, Modal, Stack } from '@mui/material';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { useCreateChatMutation } from '@/store/api/chatApi';
-import { useGetUsersQuery } from '@/store/api/userApi.ts';
-import { contactActions } from '@/store/slice/Contacts/contactsSlice.ts';
-import { User } from '@/store/slice/User/types.ts';
-import { getUserId } from '@/store/slice/User/user-selector.ts';
 
 import { ColorAvatar } from '../ColorAvatar';
 
@@ -28,38 +19,35 @@ const style = {
 type PickUser = Pick<User, 'id' | 'username'>;
 
 const ModalUsers = ({ users }: { users?: PickUser[] }) => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [open, setOpen] = React.useState(false);
-    const [createChat] = useCreateChatMutation();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleStartChat = async (user: PickUser) => {
-        try {
-            let currentUserId = null;
-            if (localStorage.getItem('user')) {
-                currentUserId = localStorage.getItem('user');
-            }
-            const response = await createChat({
-                currentUserId,
-                userId: user.id,
-            }).unwrap();
-
-            dispatch(
-                contactActions.addContact({
-                    chatId: response,
-                    id: user.id,
-                    username: user.username,
-                }),
-            );
-
-            navigate(`/${response}`);
-        } catch (error) {
-            console.error('Ошибка создания чата:', error);
-        }
-    };
+    // const handleStartChat = async (user: PickUser) => {
+    //     try {
+    //         let currentUserId = null;
+    //         if (localStorage.getItem('user')) {
+    //             currentUserId = localStorage.getItem('user');
+    //         }
+    //         const response = await createChat({
+    //             currentUserId,
+    //             userId: user.id,
+    //         }).unwrap();
+    //
+    //         dispatch(
+    //             contactActions.addContact({
+    //                 chatId: response,
+    //                 id: user.id,
+    //                 username: user.username,
+    //             }),
+    //         );
+    //
+    //         navigate(`/${response}`);
+    //     } catch (error) {
+    //         console.error('Ошибка создания чата:', error);
+    //     }
+    // };
 
     return (
         <div>
@@ -81,9 +69,7 @@ const ModalUsers = ({ users }: { users?: PickUser[] }) => {
                             >
                                 <ColorAvatar username={user.username} />
                                 <span>{user.username}</span>
-                                <Button onClick={() => handleStartChat(user)}>
-                                    Написать
-                                </Button>
+                                <Button onClick={() => {}}>Написать</Button>
                             </Stack>
                         ))}
                     </Stack>
@@ -94,8 +80,6 @@ const ModalUsers = ({ users }: { users?: PickUser[] }) => {
 };
 
 export const CreateChat = () => {
-    const userId = useSelector(getUserId);
-    const { data: users } = useGetUsersQuery(userId);
 
     return (
         <Stack
@@ -107,7 +91,7 @@ export const CreateChat = () => {
 
             <Stack>
                 <p>Начать диалог</p>
-                <ModalUsers users={users} />
+                {/*<ModalUsers users={users} />*/}
             </Stack>
         </Stack>
     );

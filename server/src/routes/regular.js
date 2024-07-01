@@ -10,7 +10,7 @@ router.get('/user/refresh/:userId', userController.refresh);
 
 router.post('/chat', chatController.createChat);
 router.get('/chat/:userId', chatController.getChatUsers);
-router.get('/messages/:chatId', chatController.getChatData);
+router.get('/messages/:chatId', chatController.getMessages);
 
 router.post('/login', userController.login);
 router.post('/register', userController.registration);

@@ -2,20 +2,19 @@ import './index.css';
 import './App.css';
 
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
 import { SidenavLayout } from '@/layouts/SidenavLayout';
 import { ChatPage } from '@/pages/ChatPage';
 import { StartPage } from '@/pages/StartPage';
-import { MaterialThemeProvider } from '@/providers';
 
-import { LoginPage } from './pages/LoginPage';
-import { StoreProvider } from './store';
+import App from './App';
+import { AuthPage } from './pages/AuthPage';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
     {
         path: '/login',
-        element: <LoginPage />,
+        element: <AuthPage />,
     },
     {
         element: <SidenavLayout />,
@@ -33,9 +32,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <StoreProvider>
-        <MaterialThemeProvider>
-            <RouterProvider router={router} />
-        </MaterialThemeProvider>
-    </StoreProvider>,
+    <App />
 );
