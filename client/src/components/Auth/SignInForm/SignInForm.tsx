@@ -1,13 +1,13 @@
 import { Button, Paper, Stack } from '@mui/material';
 import { useContext } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
 import { UserContext } from '@/context/user';
 import { usePostSignInMutation } from '@/utils/api';
 
 import cls from '../AuthForm.module.scss';
-import { useNavigate } from 'react-router-dom';
 
 type SignInFields = {
     email: string;
@@ -25,7 +25,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
 
     const { handleSubmit, control } = useForm<SignInFields>({
         defaultValues: {
-            email: 'sasha@gmail.com',
+            email: 'test@test.com',
             password: '123',
         },
     });
@@ -34,6 +34,9 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
         const user = await signIn.mutateAsync(data);
 
         if (user) {
+            if (user.accessToken)
+                localStorage.setItem('token', user.accessToken);
+
             userContext.setUser(user);
             navigate('/', {
                 replace: true,

@@ -6,24 +6,30 @@ import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
 import { UserContext } from '@/context/user';
 
+// TODO: redesign check auth when start app.
 export const SidenavLayout = () => {
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId');
+        const check = async () => {
+            if (localStorage.getItem('token')) {
+                const response = await $api.get<User>('/refresh');
+                const userData = response.data;
 
-        if (userId) {
-            const getUserData = async () => {
-                const response = await $api.get(`/user/refresh/${userId}`);
-                setUser(response.data);
-            };
-
-            getUserData();
-        }
-        setIsLoading(false);
-
+                if (userData.accessToken) {
+                    localStorage.setItem('token', userData.accessToken);
+                    setUser(userData);
+                } else {
+                    navigate('/login');
+                }
+            } else {
+                navigate('/login');
+            }
+            setIsLoading(false);
+        };
+        check();
     }, []);
 
     const onLogout = () => {
@@ -32,7 +38,7 @@ export const SidenavLayout = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
 
     return (

@@ -1,5 +1,6 @@
 const { User, ChatMember } = require('../models');
 const ApiError = require('../exceptions/api-error');
+const tokenService = require('./token-service');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 
@@ -59,7 +60,10 @@ class UserService {
             throw ApiError.BadRequest('Неверный пароль');
         }
 
-        return user;
+        const tokens = tokenService.generateTokens({ ...user });
+        await tokenService.saveToken(user.id, tokens.refreshToken);
+
+        return { ...user, ...tokens };
     }
 
     async registration(email, password, username) {
@@ -76,15 +80,34 @@ class UserService {
         }
 
         const hashPassword = await bcrypt.hash(password, 5);
-        return await User.create({
+        const user = await User.create({
             email,
             password: hashPassword,
             username,
         });
+        const userData = user.get({ plain: true });
+        const tokens = tokenService.generateTokens({ ...userData });
+        await tokenService.saveToken(user.id, tokens.refreshToken);
+
+        return {
+            ...userData,
+            ...tokens,
+        };
     }
 
-    async refresh(userId) {
-        return User.findByPk(userId);
+    async refresh(refreshToken) {
+        if (!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        }
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = await tokenService.findToken(refreshToken);
+        if (!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError();
+        }
+        const user = await User.findByPk(userData.id, { raw: true });
+        const tokens = tokenService.generateTokens({ ...user });
+        await tokenService.saveToken(user.id, tokens.refreshToken);
+        return { ...user, ...tokens };
     }
 }
 

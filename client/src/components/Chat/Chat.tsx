@@ -1,68 +1,86 @@
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { socket } from '@/api';
 import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
+import { UserContext } from '@/context/user';
+import { useGetChatMembers } from '@/utils/api';
 
 import cls from './Chat.module.scss';
-
-
-// const SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL;
+import { MessageInput } from './MessageInput/MessageInput';
 
 export const Chat = ({ chatId }: { chatId: string }) => {
-    // const dispatch = useAppDispatch();
-    // const userData = useSelector(getUserData);
-    // const contacts = useSelector(getContacts);
-    // const socket = useRef<Socket | null>(null);
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+    const { data: members } = useGetChatMembers(chatId);
+    const queryClient = useQueryClient();
 
-    // useEffect(() => {
-    //     socket.current = io(SERVER_URL);
+    useEffect(() => {
+        if (members && !members.find((member) => member.userId === user.id)) {
+            navigate('/', {
+                replace: true,
+            });
+        }
+    }, [members, navigate, user.id]);
 
-    //     socket.current.on('message', (message: Message) => {
-    //         if (chatId === message.chatId.toString()) {
-    //             setMessages((prevMessages) => [...prevMessages, message]);
-    //         } else {
-    //             if (
-    //                 message.senderId !== Number(userId) &&
-    //                 !contacts?.find(
-    //                     (contact) => contact.id == message.senderId.toString(),
-    //                 )
-    //             ) {
-    //                 dispatch(
-    //                     contactActions.addContact({
-    //                         chatId: message.chatId,
-    //                         id: message.senderId.toString(),
-    //                         username: message.username?.toString() ?? '123',
-    //                     }),
-    //                 );
-    //             }
-    //         }
-    //     });
+    useEffect(() => {
+        socket.on('message', (message: Message) => {
+            if (chatId === message.chatId.toString()) {
+                queryClient.setQueryData(
+                    ['chat', `${chatId}`],
+                    (oldData: InfiniteData<MessagesChatApiResponse>) => {
+                        if (!oldData) {
+                            return {
+                                pages: [
+                                    { messages: [message], isLastPage: false },
+                                ],
+                                pageParams: [1],
+                            };
+                        }
 
-    //     return () => {
-    //         if (socket.current && socket.current?.active)
-    //             socket.current?.disconnect();
-    //     };
-    // }, [chatId, userId, dispatch, contacts]);
+                        const newPages = oldData.pages.map((page, index) => {
+                            if (index === 0) {
+                                return {
+                                    ...page,
+                                    data: [...page.data, message],
+                                };
+                            }
+                            return page;
+                        });
 
-    // const sendMessage = useCallback(
-    //     (newMessage: string) => {
-    //         if (newMessage.trim()) {
-    //             socket.current?.emit('message', {
-    //                 chatId: chatId,
-    //                 senderId: Number(userId),
-    //                 content: newMessage,
-    //                 username: userData?.username,
-    //             });
-    //         }
-    //     },
-    //     [chatId, userData?.username, userId],
-    // );
+                        return {
+                            ...oldData,
+                            pages: newPages,
+                        };
+                    },
+                );
+            }
+        });
+
+        return () => {
+            if (socket && socket?.active) socket?.disconnect();
+        };
+    }, [chatId, queryClient]);
+
+    const sendMessage = useCallback(
+        (newMessage: string) => {
+            if (newMessage.trim()) {
+                socket?.emit('message', {
+                    chatId: Number(chatId),
+                    senderId: user.id,
+                    content: newMessage,
+                    username: user.username,
+                });
+            }
+        },
+        [chatId, user.id, user.username],
+    );
 
     return (
         <div className={cls.Chat}>
-                {/*<MessageList*/}
-                {/*    userId={Number(userId)}*/}
-                {/*    chatId={Number(chatId)}*/}
-                {/*/>*/}
-            {/* <MessageInput sendMessage={sendMessage} /> */}
+            <MessageList userId={user.id} chatId={Number(chatId)} />
+            <MessageInput sendMessage={sendMessage} />
         </div>
     );
 };

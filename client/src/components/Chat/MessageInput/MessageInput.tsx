@@ -1,6 +1,6 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Button, Stack, TextField } from '@mui/material';
-import { memo,useState } from 'react';
+import { memo, useState } from 'react';
 
 import cls from './MessageInput.module.scss';
 

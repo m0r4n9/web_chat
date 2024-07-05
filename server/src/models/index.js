@@ -154,6 +154,15 @@ const Contact = sequelize.define(
     },
 );
 
+const Token = sequelize.define(
+    'Token',
+    {
+        id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+        refreshToken: { type: DataTypes.TEXT, allowNull: false },
+    },
+    { timestamps: false, tableName: 'tokens' },
+);
+
 Chat.hasMany(Message, { foreignKey: 'chatId' });
 Message.belongsTo(Chat, { foreignKey: 'chatId' });
 
@@ -166,10 +175,14 @@ User.belongsToMany(Chat, { through: ChatMember, foreignKey: 'userId' });
 User.hasMany(Contact, { foreignKey: 'userId' });
 User.hasMany(Contact, { foreignKey: 'contactId' });
 
+User.hasOne(Token);
+Token.belongsTo(User);
+
 module.exports = {
     User,
     Chat,
     ChatMember,
     Message,
     Contact,
+    Token,
 };

@@ -1,3 +1,4 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ReactNode } from 'react';
 
 import { QueryProvider, QueryProviderProps } from '@/context/QueryProvider';
@@ -15,7 +16,10 @@ export const Providers = ({ children, user, query }: ProviderProps) => {
     return (
         <UserProvider {...user}>
             <MaterialThemeProvider>
-                <QueryProvider {...query}>{children}</QueryProvider>
+                <QueryProvider {...query}>
+                    <ReactQueryDevtools initialIsOpen={true} />
+                    {children}
+                </QueryProvider>
             </MaterialThemeProvider>
         </UserProvider>
     );

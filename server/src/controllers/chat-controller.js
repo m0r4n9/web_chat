@@ -1,5 +1,5 @@
 const chatService = require('../services/chat-service');
-const { User, ChatMember } = require('../models');
+const { User, ChatMember, Message } = require('../models');
 const { Op } = require('sequelize');
 
 class ChatController {
@@ -60,13 +60,34 @@ class ChatController {
                 userMap[user.id] = user;
             });
 
-            const result = chatUsers.map((chatUser) => {
-                const user = userMap[chatUser.userId];
-                return {
+            const result = [];
+            for (let i = 0; i < chatUsers.length; i++) {
+                const user = userMap[chatUsers[i].userId];
+                const message = await Message.findOne({
+                    where: {
+                        chatId: chatUsers[i].chatId,
+                    },
+                    limit: 1,
+                    order: [['messageId', 'DESC']],
+                });
+
+                result.push({
                     ...user,
-                    chatId: chatUser.chatId,
-                };
-            });
+                    message: message.content,
+                    chatId: chatUsers[i].chatId,
+                })
+                // return {
+                //     ...user,
+                //     message,
+                //     chatId: chatUser.chatId,
+                // };
+            }
+
+            // const result = chatUsers.map((chatUser) => {
+                
+            // });
+
+            console.log(result);
 
             return res.json(result);
         } catch (error) {
@@ -85,6 +106,16 @@ class ChatController {
                 page,
             });
             return res.json(messages);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getChatMembers(req, res, next) {
+        const chatId = req.params.chatId;
+        try {
+            const members = await chatService.getChatMembers(chatId);
+            return res.json(members);
         } catch (error) {
             next(error);
         }

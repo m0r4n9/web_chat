@@ -19,11 +19,7 @@ const signIn = async (data: UseAuthQueryParams) => {
 
 export const usePostSignInMutation = () => {
     return useMutation<
-        {
-            id: string;
-            username: string;
-            email: string;
-        },
+        User,
         AxiosError<{
             message: string;
         }>,

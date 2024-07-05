@@ -13,11 +13,13 @@ class UserController {
     }
 
     async login(req, res, next) {
+        const { email, password } = req.body;
         try {
-            const user = await userService.login(
-                req.body.email,
-                req.body.password,
-            );
+            const user = await userService.login(email, password);
+            res.cookie('refreshToken', user.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
             return res.json(user);
         } catch (error) {
             next(error);
@@ -42,13 +44,18 @@ class UserController {
     }
 
     async refresh(req, res, next) {
-        const { userId } = req.params;
-
         try {
-            const user = await userService.refresh(userId);
+            const { refreshToken } = req.cookies;
+            console.log(refreshToken);
+
+            const user = await userService.refresh(refreshToken);
+            res.cookie('refreshToken', user.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
             return res.json(user);
-        } catch (error) {
-            next(error);
+        } catch (e) {
+            next(e);
         }
     }
 }

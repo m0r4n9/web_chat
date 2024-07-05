@@ -1,5 +1,9 @@
 import { Box, Button, Modal, Stack } from '@mui/material';
-import * as React from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { UserContext } from '@/context/user';
+import { useGetUnmessagedUsers, usePostCreateChatMutation } from '@/utils/api';
 
 import { ColorAvatar } from '../ColorAvatar';
 
@@ -16,38 +20,29 @@ const style = {
     overflow: 'hidden',
 };
 
-type PickUser = Pick<User, 'id' | 'username'>;
+type UserOmit = Omit<User, 'accessToken'>;
 
-const ModalUsers = ({ users }: { users?: PickUser[] }) => {
-    const [open, setOpen] = React.useState(false);
+const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+    const [open, setOpen] = useState(false);
+    const createChatMutation = usePostCreateChatMutation();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    // const handleStartChat = async (user: PickUser) => {
-    //     try {
-    //         let currentUserId = null;
-    //         if (localStorage.getItem('user')) {
-    //             currentUserId = localStorage.getItem('user');
-    //         }
-    //         const response = await createChat({
-    //             currentUserId,
-    //             userId: user.id,
-    //         }).unwrap();
-    //
-    //         dispatch(
-    //             contactActions.addContact({
-    //                 chatId: response,
-    //                 id: user.id,
-    //                 username: user.username,
-    //             }),
-    //         );
-    //
-    //         navigate(`/${response}`);
-    //     } catch (error) {
-    //         console.error('Ошибка создания чата:', error);
-    //     }
-    // };
+    const handleStartChat = async (userId: number) => {
+        try {
+            const response = await createChatMutation.mutateAsync({
+                currentUserId: user.id,
+                userId,
+            });
+
+            navigate(`/chat/${response}`);
+        } catch (error) {
+            console.error('Ошибка создания чата:', error);
+        }
+    };
 
     return (
         <div>
@@ -61,17 +56,26 @@ const ModalUsers = ({ users }: { users?: PickUser[] }) => {
                 <Box sx={style}>
                     <h2>Выберите пользователя</h2>
                     <Stack spacing={1}>
-                        {users?.map((user) => (
-                            <Stack
-                                key={user.id}
-                                direction='row'
-                                justifyContent='space-between'
-                            >
-                                <ColorAvatar username={user.username} />
-                                <span>{user.username}</span>
-                                <Button onClick={() => {}}>Написать</Button>
-                            </Stack>
-                        ))}
+                        {users?.length ? (
+                            users.map((user) => (
+                                <Stack
+                                    key={user.id}
+                                    direction='row'
+                                    justifyContent='space-between'
+                                    alignItems='center'
+                                >
+                                    <ColorAvatar username={user.username} />
+                                    <span>{user.username}</span>
+                                    <Button
+                                        onClick={() => handleStartChat(user.id)}
+                                    >
+                                        Написать
+                                    </Button>
+                                </Stack>
+                            ))
+                        ) : (
+                            <div>Нет пользователей, которым можно написать</div>
+                        )}
                     </Stack>
                 </Box>
             </Modal>
@@ -80,6 +84,8 @@ const ModalUsers = ({ users }: { users?: PickUser[] }) => {
 };
 
 export const CreateChat = () => {
+    const { user } = useContext(UserContext);
+    const { data: users } = useGetUnmessagedUsers(user.id);
 
     return (
         <Stack
@@ -91,7 +97,7 @@ export const CreateChat = () => {
 
             <Stack>
                 <p>Начать диалог</p>
-                {/*<ModalUsers users={users} />*/}
+                <ModalUsers users={users} />
             </Stack>
         </Stack>
     );

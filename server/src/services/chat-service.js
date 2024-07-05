@@ -4,7 +4,7 @@ const ApiError = require('../exceptions/api-error');
 
 class ChatService {
     async createChat(currentUserId, userId) {
-        if (!currentUserChatIds || !userId) {
+        if (!currentUserId || !userId) {
             throw new ApiError.BadRequest('Данные неполные');
         }
 
@@ -53,7 +53,7 @@ class ChatService {
         return chatData.chatId;
     }
 
-    async getMessages({chatId, page = 1}) {
+    async getMessages({ chatId, page = 1 }) {
         const limit = 15;
         const offset = (parseInt(page) - 1) * limit;
 
@@ -66,9 +66,11 @@ class ChatService {
         const totalMessages = await Message.count({
             where: {
                 chatId,
-            }
+            },
         });
         const totalPages = Math.ceil(totalMessages / limit);
+
+        console.log('Total Page: ', totalPages);
 
         const messages = await Message.findAll({
             limit,
@@ -82,8 +84,19 @@ class ChatService {
         return {
             data: messages.reverse(),
             nextCursor: ++page,
-            isLastPage: page >= totalPages,
-        }
+            isLastPage: page > totalPages,
+        };
+    }
+
+    async getChatMembers(chatId) {
+        const members = await ChatMember.findAll({
+            where: {
+                chatId,
+            },
+            attributes: ['userId'],
+            raw: true
+        });
+        return members;
     }
 }
 

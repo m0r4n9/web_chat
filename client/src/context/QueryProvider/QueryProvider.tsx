@@ -7,5 +7,7 @@ export interface QueryProviderProps
 }
 
 export const QueryProvider = ({ children, client }: QueryProviderProps) => {
-    return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+    return (
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
 };

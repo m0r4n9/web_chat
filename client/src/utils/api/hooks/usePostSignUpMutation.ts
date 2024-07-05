@@ -9,7 +9,6 @@ interface UseAuthQueryParams {
     password: string;
 }
 
-
 const saveUser = (user: { id: string; username: string; email: string }) => {
     localStorage.setItem('user', JSON.stringify(user));
 };

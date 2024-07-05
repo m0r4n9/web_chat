@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
+const cookieParser = require('cookie-parser');
 
 const sequelize = require('./db');
 const router = require('./routes/regular');
@@ -22,6 +23,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(
     cors({
@@ -66,7 +68,7 @@ const start = async () => {
         await sequelize.authenticate();
         await sequelize.sync({
             // force: true
-            // alter: true
+            alter: true
         });
         server.listen(PORT, () =>
             console.log(`Server started on PORT = ${PORT}`),

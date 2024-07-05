@@ -10,6 +10,11 @@
 
   padding: 4px 10px;
 
+  max-width: 300px;
+  text-wrap: wrap;
+
+  height: auto;
+
   &.isMine {
     align-self: end;
     justify-self: end;

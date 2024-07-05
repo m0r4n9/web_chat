@@ -24,13 +24,11 @@ export const router = createBrowserRouter([
                 element: <StartPage />,
             },
             {
-                path: '/:chatId',
+                path: '/chat/:chatId',
                 element: <ChatPage />,
             },
         ],
     },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <App />
-);
+ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
