@@ -8,7 +8,7 @@ import { MaterialThemeProvider } from './providers/MaterialThemeProvider';
 
 export interface ProviderProps {
     children: ReactNode;
-    user: Omit<UserProviderProps, 'children'>;
+    user?: Omit<UserProviderProps, 'children'>;
     query: Omit<QueryProviderProps, 'children'>;
 }
 

@@ -8,10 +8,6 @@ interface UseAuthQueryParams {
     password: string;
 }
 
-const saveUserId = (userId: string) => {
-    localStorage.setItem('userId', userId);
-};
-
 const signIn = async (data: UseAuthQueryParams) => {
     const response = await $api.post('/login', data);
     return response.data;
@@ -27,8 +23,5 @@ export const usePostSignInMutation = () => {
     >({
         mutationKey: ['signIn'],
         mutationFn: (data) => signIn(data),
-        onSuccess: (data) => {
-            saveUserId(data.id);
-        },
     });
 };
