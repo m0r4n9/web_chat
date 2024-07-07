@@ -4,19 +4,19 @@ import { AxiosError } from 'axios';
 import { $api } from '@/api';
 
 interface CreateChat {
-    chatId: number;
+  chatId: number;
 }
 
 interface CreateChatParams {
-    userId: number;
-    currentUserId: number;
+  userId: number;
+  currentUserId: number;
 }
 
 export const usePostCreateChatMutation = () =>
-    useMutation<CreateChat, AxiosError, CreateChatParams>({
-        mutationKey: ['createChat'],
-        mutationFn: async (data) => {
-            const response = await $api.post('/chat', data);
-            return response.data;
-        },
-    });
+  useMutation<CreateChat, AxiosError, CreateChatParams>({
+    mutationKey: ['createChat'],
+    mutationFn: async (data) => {
+      const response = await $api.post('/chat', data);
+      return response.data;
+    },
+  });

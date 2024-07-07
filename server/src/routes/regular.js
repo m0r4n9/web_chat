@@ -1,19 +1,18 @@
-const Router = require('express');
+import Router from 'express';
 
-const userController = require('../controllers/user-controller');
-const chatController = require('../controllers/chat-controller');
+import UserController from '../controllers/user-controller.js';
+import ChatController from '../controllers/chat-controller.js';
 
-const router = new Router();
+export const router = new Router();
 
-router.get('/users/:userId', userController.getUsers);
+router.get('/users/:userId', UserController.getUsers);
 
-router.post('/chat', chatController.createChat);
-router.get('/chat/:userId', chatController.getChatUsers);
-router.get('/messages/:chatId', chatController.getMessages);
-router.get('/chat/members/:chatId', chatController.getChatMembers);
+router.post('/chat', ChatController.createChat);
+router.get('/chat/:userId', ChatController.getChatUsers);
+router.get('/messages/:chatId', ChatController.getMessages);
+router.get('/chat/members/:chatId', ChatController.getChatMembers);
+router.get('/chats/:userId', ChatController.getUserChats);
 
-router.post('/login', userController.login);
-router.post('/register', userController.registration);
-router.get('/refresh', userController.refresh);
-
-module.exports = router;
+router.post('/login', UserController.login);
+router.post('/register', UserController.registration);
+router.get('/refresh', UserController.refresh);

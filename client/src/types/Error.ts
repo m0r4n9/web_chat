@@ -1,4 +1,4 @@
 export interface ErrorInterface {
-    message?: string;
-    errors?: string[];
+  message?: string;
+  errors?: string[];
 }

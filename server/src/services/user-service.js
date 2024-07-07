@@ -1,114 +1,127 @@
-const { User, ChatMember } = require('../models');
-const ApiError = require('../exceptions/api-error');
-const tokenService = require('./token-service');
-const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
+import { User, ChatMember } from '../models/index.js';
+import ApiError from '../exceptions/api-error.js';
+import TokenService from './token-service.js';
+import bcrypt from 'bcrypt';
+import { Op } from 'sequelize';
 
 class UserService {
-    async getUsers(userId) {
-        try {
-            const existingChatUserIds = await ChatMember.findAll({
-                where: {
-                    userId: userId,
-                },
-                attributes: ['chatId'],
-            });
+  getUserByToken(token) {
+    const user = TokenService.validateRefreshToken(token);
 
-            const existingChatIds = existingChatUserIds.map(
-                (chatMember) => chatMember.chatId,
-            );
-
-            const usersInExistingChats = await ChatMember.findAll({
-                where: {
-                    chatId: {
-                        [Op.in]: existingChatIds,
-                    },
-                    userId: {
-                        [Op.ne]: userId,
-                    },
-                },
-                attributes: ['userId'],
-            });
-
-            const usersInExistingChatIds = usersInExistingChats.map(
-                (chatMember) => chatMember.userId,
-            );
-
-            return await User.findAll({
-                where: {
-                    id: {
-                        [Op.ne]: userId,
-                        [Op.notIn]: usersInExistingChatIds,
-                    },
-                },
-                attributes: ['id', 'username', 'email'],
-            });
-        } catch (err) {
-            throw Error(`Error while fetching Users: ${err}`);
-        }
+    if (!user) {
+      throw ApiError.UnauthorizedError();
     }
 
-    async login(email, password) {
-        const user = await User.findOne({ where: { email }, raw: true });
-        if (!user) {
-            throw ApiError.BadRequest(
-                'Пользователь с таким почтовым адрессом не найден',
-            );
-        }
-        const isPassEquals = await bcrypt.compare(password, user.password);
-        if (!isPassEquals) {
-            throw ApiError.BadRequest('Неверный пароль');
-        }
+    return {
+      id: user.id,
+      email: user.email,
+    };
+  }
 
-        const tokens = tokenService.generateTokens({ ...user });
-        await tokenService.saveToken(user.id, tokens.refreshToken);
+  async getUsers(userId) {
+    try {
+      const existingChatUserIds = await ChatMember.findAll({
+        where: {
+          userId: userId,
+        },
+        attributes: ['chatId'],
+      });
 
-        return { ...user, ...tokens };
+      const existingChatIds = existingChatUserIds.map(
+        (chatMember) => chatMember.chatId,
+      );
+
+      const usersInExistingChats = await ChatMember.findAll({
+        where: {
+          chatId: {
+            [Op.in]: existingChatIds,
+          },
+          userId: {
+            [Op.ne]: userId,
+          },
+        },
+        attributes: ['userId'],
+      });
+
+      const usersInExistingChatIds = usersInExistingChats.map(
+        (chatMember) => chatMember.userId,
+      );
+
+      return await User.findAll({
+        where: {
+          id: {
+            [Op.ne]: userId,
+            [Op.notIn]: usersInExistingChatIds,
+          },
+        },
+        attributes: ['id', 'username', 'email'],
+      });
+    } catch (err) {
+      throw Error(`Error while fetching Users: ${err}`);
+    }
+  }
+
+  async login(email, password) {
+    const user = await User.findOne({ where: { email }, raw: true });
+    if (!user) {
+      throw ApiError.BadRequest(
+        'Пользователь с таким почтовым адрессом не найден',
+      );
+    }
+    const isPassEquals = await bcrypt.compare(password, user.password);
+    if (!isPassEquals) {
+      throw ApiError.BadRequest('Неверный пароль');
     }
 
-    async registration(email, password, username) {
-        const candidate = await User.findOne({
-            where: {
-                email,
-            },
-        });
+    const tokens = TokenService.generateTokens({ ...user });
+    await TokenService.saveToken(user.id, tokens.refreshToken);
 
-        if (candidate) {
-            throw ApiError.BadRequest(
-                'Пользователь с таким почтовым адрессом уже существует',
-            );
-        }
+    return { ...user, ...tokens };
+  }
 
-        const hashPassword = await bcrypt.hash(password, 5);
-        const user = await User.create({
-            email,
-            password: hashPassword,
-            username,
-        });
-        const userData = user.get({ plain: true });
-        const tokens = tokenService.generateTokens({ ...userData });
-        await tokenService.saveToken(user.id, tokens.refreshToken);
+  async registration(email, password, username) {
+    const candidate = await User.findOne({
+      where: {
+        email,
+      },
+    });
 
-        return {
-            ...userData,
-            ...tokens,
-        };
+    if (candidate) {
+      throw ApiError.BadRequest(
+        'Пользователь с таким почтовым адрессом уже существует',
+      );
     }
 
-    async refresh(refreshToken) {
-        if (!refreshToken) {
-            throw ApiError.UnauthorizedError();
-        }
-        const userData = tokenService.validateRefreshToken(refreshToken);
-        const tokenFromDb = await tokenService.findToken(refreshToken);
-        if (!userData || !tokenFromDb) {
-            throw ApiError.UnauthorizedError();
-        }
-        const user = await User.findByPk(userData.id, { raw: true });
-        const tokens = tokenService.generateTokens({ ...user });
-        await tokenService.saveToken(user.id, tokens.refreshToken);
-        return { ...user, ...tokens };
+    const hashPassword = await bcrypt.hash(password, 5);
+    const user = await User.create({
+      email,
+      password: hashPassword,
+      username,
+    });
+    const userData = user.get({ plain: true });
+    const tokens = TokenService.generateTokens({ ...userData });
+    await TokenService.saveToken(user.id, tokens.refreshToken);
+
+    return {
+      ...userData,
+      ...tokens,
+    };
+  }
+
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizedError();
     }
+    const userData = TokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await TokenService.findToken(refreshToken);
+    if (!userData || !tokenFromDb) {
+      throw ApiError.UnauthorizedError();
+    }
+    const user = await User.findByPk(userData.id, { raw: true });
+    const tokens = TokenService.generateTokens({ ...user });
+    await TokenService.saveToken(user.id, tokens.refreshToken);
+    return { ...user, ...tokens };
+  }
 }
 
-module.exports = new UserService();
+export default new UserService();

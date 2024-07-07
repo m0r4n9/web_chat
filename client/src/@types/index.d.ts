@@ -1,31 +1,31 @@
 interface User {
-    id: number;
-    email: string;
-    username: string;
+  id: number;
+  email: string;
+  username: string;
 
-    accessToken?: string;
+  accessToken?: string;
 }
 
 interface Message {
-    id: number;
-    chatId: number;
-    senderId: number;
-    content: string;
+  id: number;
+  chatId: number;
+  senderId: number;
+  content: string;
 }
 
 interface Contact {
-    id: number;
-    chatId: number;
-    username: string;
-    message: string;
+  id: number;
+  chatId: number;
+  username: string;
+  message: string;
 }
 
 interface MessagesChatApiResponse {
-    data: Message[];
-    nextCursor?: string;
-    isLastPage: boolean;
+  data: Message[];
+  nextCursor?: string;
+  isLastPage: boolean;
 }
 
 interface ChatMembers {
-    users: Pick<User, 'id'>;
+  users: Pick<User, 'id'>;
 }

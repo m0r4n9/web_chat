@@ -6,19 +6,17 @@ import { SignUpForm } from './SignUpForm/SignUpForm.tsx';
 type AuthStage = 'signIn' | 'signUp';
 
 export const FormContainer = () => {
-    const [stage, setStage] = useState<AuthStage>('signIn');
+  const [stage, setStage] = useState<AuthStage>('signIn');
 
-    const toggleStage = useCallback(
-        () =>
-            setStage((prevState) =>
-                prevState === 'signIn' ? 'signUp' : 'signIn',
-            ),
-        [],
-    );
+  const toggleStage = useCallback(
+    () =>
+      setStage((prevState) => (prevState === 'signIn' ? 'signUp' : 'signIn')),
+    [],
+  );
 
-    if (stage === 'signIn') {
-        return <SignInForm toggleStage={toggleStage} />;
-    }
+  if (stage === 'signIn') {
+    return <SignInForm toggleStage={toggleStage} />;
+  }
 
-    return <SignUpForm toggleStage={toggleStage} />;
+  return <SignUpForm toggleStage={toggleStage} />;
 };

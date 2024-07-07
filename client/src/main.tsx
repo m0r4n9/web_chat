@@ -12,23 +12,23 @@ import App from './App';
 import { AuthPage } from './pages/AuthPage';
 
 export const router = createBrowserRouter([
-    {
-        path: '/login',
-        element: <AuthPage />,
-    },
-    {
-        element: <SidenavLayout />,
-        children: [
-            {
-                path: '/',
-                element: <StartPage />,
-            },
-            {
-                path: '/chat/:chatId',
-                element: <ChatPage />,
-            },
-        ],
-    },
+  {
+    path: '/login',
+    element: <AuthPage />,
+  },
+  {
+    element: <SidenavLayout />,
+    children: [
+      {
+        path: '/',
+        element: <StartPage />,
+      },
+      {
+        path: '/chat/:chatId',
+        element: <ChatPage />,
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);

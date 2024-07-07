@@ -2,18 +2,18 @@ services:
   postgresqldb:
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=web_chat
     volumes:
-    - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
 
   app:
     build: .
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - PORT=8080
       - CLIENT_URL=http://localhost:5173
@@ -24,6 +24,6 @@ services:
       - DB_HOST=postgresqldb
     depends_on:
       - postgresqldb
-  
+
 volumes:
   db:

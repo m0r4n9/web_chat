@@ -1,23 +1,25 @@
-require('dotenv').config();
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import http from 'http';
+import { Server } from 'socket.io';
+import cookieParser from 'cookie-parser';
 
-const express = require('express');
-const cors = require('cors');
-const http = require('http');
-const { Server } = require('socket.io');
-const cookieParser = require('cookie-parser');
-
-const sequelize = require('./db');
-const router = require('./routes/regular');
-const errorHandler = require('./middlewares/error-middleware');
-const { Message } = require('./models');
+import sequelize from './db.js';
+import { router } from './routes/regular.js';
+import errorHandler from './middlewares/error-middleware.js';
+import { Message } from './models/index.js';
+import userService from './services/user-service.js';
+import { initEventHandlers } from './initEventHandlers.js';
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-        origin: process.env.CLIENT_URL,
-        methods: ['GET', 'POST'],
-    },
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
 });
 const PORT = process.env.PORT || 8080;
 
@@ -26,56 +28,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(
-    cors({
-        credentials: true,
-        origin: [process.env.CLIENT_URL, 'http://localhost:3001'],
-    }),
+  cors({
+    credentials: true,
+    origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
+  }),
 );
 
 app.use('/api', router);
 app.use(errorHandler);
 
-io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-
-    socket.on('message', async (msg) => {
-        try {
-            await Message.create({
-                chatId: msg.chatId,
-                senderId: msg.senderId,
-                content: msg.content,
-                username: msg.username,
-            });
-        } catch (error) {
-            console.log(error);
-        }
-
-        io.emit('message', msg);
-    });
-
-    socket.on('foo', (data) => {
-        console.log('foo event received:', data);
-        io.emit('foo', data);
-    });
-});
+initEventHandlers({ io });
 
 const start = async () => {
-    try {
-        await sequelize.authenticate();
-        await sequelize.sync({
-            // force: true
-            alter: true
-        });
-        server.listen(PORT, () =>
-            console.log(`Server started on PORT = ${PORT}`),
-        );
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({
+      // force: true
+      // alter: true
+    });
+    server.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 start();
