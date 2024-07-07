@@ -1,6 +1,6 @@
-import { Message } from './models/index.js';
 import chatService from './services/chat-service.js';
 import userService from './services/user-service.js';
+import EventMessages from './events/messages.js';
 
 export function initEventHandlers({ io }) {
   io.use(async (socket, next) => {
@@ -13,6 +13,10 @@ export function initEventHandlers({ io }) {
         return acc;
       }, {});
     };
+
+    if (!cookies) {
+      return next(new Error('Not authorized'));
+    }
 
     const parsedCookies = parseCookies(cookies);
     const refreshToken = parsedCookies['refreshToken'];
@@ -33,36 +37,23 @@ export function initEventHandlers({ io }) {
       return next(error);
     }
     chats.forEach((chatId) => {
-        socket.join(`chat:${chatId}`);
-    })
-    console.log('Chats: ', chats);
+      socket.join(`chat:${chatId}`);
+    });
     next();
   });
 
   io.on('connection', (socket) => {
     console.log('Connection User: ', socket.user);
 
+    socket.on('message:send', async (message) =>
+      EventMessages.send(socket, message),
+    );
+    socket.on('message:typing', async (payload) =>
+      EventMessages.typing(socket, payload),
+    );
+
     socket.on('disconnect', () => {
       console.log('user disconnected');
-    });
-
-    socket.on('message:send', async (msg) => {
-      try {
-        const message = await Message.create({
-          chatId: msg.chatId,
-          senderId: msg.senderId,
-          content: msg.content,
-          username: msg.username,
-        });
-        socket.emit('message:sent', message);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
-    socket.on('foo', (data) => {
-      console.log('foo event received:', data);
-      io.emit('foo', data);
     });
   });
 }

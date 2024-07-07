@@ -69,25 +69,19 @@ class ChatController {
           },
           limit: 1,
           order: [['messageId', 'DESC']],
+          raw: true,
         });
+
+        if (!message) continue;
+
+        console.log('Message: ', message);
 
         result.push({
           ...user,
           message: message.content,
           chatId: chatUsers[i].chatId,
         });
-        // return {
-        //     ...user,
-        //     message,
-        //     chatId: chatUser.chatId,
-        // };
       }
-
-      // const result = chatUsers.map((chatUser) => {
-
-      // });
-
-
       return res.json(result);
     } catch (error) {
       console.error('Error fetching contacts:', error);

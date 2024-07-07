@@ -28,10 +28,10 @@ export const ChatNavigation = () => {
       });
     };
 
-    socket.on('message', handleMessage);
+    socket.on('message:sent', handleMessage);
 
     return () => {
-      socket.off('message', handleMessage);
+      socket.off('message:sent', handleMessage);
       if (socket && socket.connected) socket.disconnect();
     };
   }, [queryClient]);
