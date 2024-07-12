@@ -44,6 +44,7 @@ class EventMessage {
   }
 
   async typing(socket, payload) {
+    console.log('Message:typing: ', payload);
     if (validatePayloadTyping(payload)) {
       return;
     }

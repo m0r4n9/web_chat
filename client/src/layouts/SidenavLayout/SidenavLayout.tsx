@@ -1,12 +1,13 @@
-import { Button, Divider, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
+import { Stack } from '@/components/ui/Stack';
 import { UserContext } from '@/context/user';
 
-// TODO: redesign check auth when start app.
+import cls from './SidenavLayout.module.scss';
+
 export const SidenavLayout = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
@@ -29,29 +30,22 @@ export const SidenavLayout = () => {
       }
       setIsLoading(false);
     };
-    check();
-  }, []);
 
-  const onLogout = () => {
-    localStorage.removeItem('userId');
-    navigate('/login');
-  };
+    check();
+  }, [navigate, setUser]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className='main'>
-      <h1>Online-web Chat</h1>
-      <Button onClick={onLogout}>Выйти из аккаунта</Button>
+    <div className={cls.main}>
       <Stack
+        as='main'
         direction='row'
-        spacing={2}
-        alignItems='stretch'
+        gap='12'
+        align='stretch'
         className='wrapper'
-        style={{ marginTop: 20 }}
-        divider={<Divider orientation='vertical' flexItem />}
       >
         <ChatNavigation />
         <Outlet />

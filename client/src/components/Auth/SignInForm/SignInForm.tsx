@@ -1,9 +1,10 @@
-import { Button, Paper, Stack } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import { useContext } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
+import { Stack } from '@/components/ui/Stack';
 import { UserContext } from '@/context/user';
 import { usePostSignInMutation } from '@/utils/api';
 
@@ -59,7 +60,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
           rules={{ required: 'Это поле обязательно' }}
         />
 
-        <Stack spacing={2} direction='column'>
+        <Stack gap='12' direction='column'>
           {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
           <Button type='submit' variant='contained'>
             Войти

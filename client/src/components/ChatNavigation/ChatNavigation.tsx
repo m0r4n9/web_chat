@@ -1,9 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { socket } from '@/api';
+import { HamburgerIcon } from '@/assets/icons';
 import { ContactItem } from '@/components/ChatNavigation';
+import { Stack } from '@/components/ui/Stack';
 import { UserContext } from '@/context/user';
 import { useGetContactsQuery } from '@/utils/api';
 
@@ -38,9 +40,17 @@ export const ChatNavigation = () => {
 
   return (
     <div className={cls.ChatNavigation}>
-      <Link to='/' className={cls.homeLink}>
-        Чаты
-      </Link>
+      <Stack direction='row' gap='8'>
+        <HamburgerIcon width={40} height={40} />
+
+        <div
+          style={{
+            width: '100%',
+          }}
+        >
+          <input />
+        </div>
+      </Stack>
 
       <div className={cls.scrollContainer}>
         <ul className={cls.contactsList}>

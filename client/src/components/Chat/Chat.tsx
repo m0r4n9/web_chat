@@ -79,7 +79,7 @@ export const Chat = ({ chatId }: { chatId: string }) => {
         const message = {
           chatId: Number(chatId),
           content: newMessage,
-          senderId: user.id
+          senderId: user.id,
         };
 
         addMessage({ queryClient, chatId, message });
@@ -87,13 +87,13 @@ export const Chat = ({ chatId }: { chatId: string }) => {
         socket.emit('message:send', message);
       }
     },
-    [chatId, user.id, user.username, queryClient],
+    [chatId, user.id, queryClient],
   );
 
   return (
     <div className={cls.Chat}>
       <MessageList userId={user.id} chatId={Number(chatId)} />
-      <MessageInput sendMessage={sendMessage} />
+      <MessageInput sendMessage={sendMessage} chatId={chatId} />
     </div>
   );
 };

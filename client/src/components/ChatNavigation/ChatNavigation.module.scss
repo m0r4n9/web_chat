@@ -1,7 +1,10 @@
 .ChatNavigation {
-  min-width: 250px;
-  max-height: 600px;
+  width: 35vw;
+  min-width: 320px;
+  height: 100svh;
   overflow: hidden;
+
+  background: black;
 }
 
 .item {
@@ -26,7 +29,7 @@
   color: inherit;
   cursor: pointer;
   transition: opacity 0.3s ease;
-  
+
   &:hover {
     color: inherit;
     opacity: 0.8;
