@@ -7,7 +7,7 @@ import {
 
 import { classNames, Mods } from '@/utils/lib/ClassNames';
 
-import cls from './Stack.module.scss';
+import cls from './Flex.module.scss';
 
 export type FlexJustify = 'center' | 'start' | 'end' | 'between';
 export type FlexAlign = 'center' | 'start' | 'end' | 'stretch';
@@ -30,16 +30,19 @@ const justifyClasses: Record<FlexJustify, string> = {
   center: cls.justifyCenter,
   between: cls.justifyBetween,
 };
+
 const alignClasses: Record<FlexAlign, string> = {
   start: cls.alignStart,
   end: cls.alignEnd,
   center: cls.alignCenter,
   stretch: cls.alignStretch,
 };
+
 const directionClasses: Record<FlexDirection, string> = {
   row: cls.directionRow,
   column: cls.directionColumn,
 };
+
 const gapClasses: Record<FlexGap, string> = {
   8: cls.gap8,
   10: cls.gap10,
@@ -61,21 +64,21 @@ type FlexProps<T extends ElementType> = DynamicTagProps<T> & {
   children: ReactNode;
   justify?: FlexJustify;
   align?: FlexAlign;
-  direction: FlexDirection;
+  direction?: FlexDirection;
   wrap?: FlexWrap;
   gap?: FlexGap;
   style?: CSSProperties;
   max?: boolean;
 };
 
-export const Stack = <T extends ElementType = 'div'>(props: FlexProps<T>) => {
+export const Flex = <T extends ElementType = 'div'>(props: FlexProps<T>) => {
   const {
-    as: Tag = 'div',
+    as: Component = 'div',
     className,
     children,
     justify = 'start',
     direction = 'row',
-    align = 'center',
+    align = 'start',
     gap,
     style,
     max,
@@ -96,12 +99,12 @@ export const Stack = <T extends ElementType = 'div'>(props: FlexProps<T>) => {
   };
 
   return (
-    <Tag
+    <Component
       style={style}
       className={classNames(cls.Stack, mods, classes)}
       {...rest}
     >
       {children}
-    </Tag>
+    </Component>
   );
 };

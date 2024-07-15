@@ -1,8 +1,9 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Button, Stack, TextField } from '@mui/material';
-import { memo, useEffect,useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import * as React from 'react';
 
 import { socket } from '@/api';
+import { Flex } from '@/components/ui/Flex';
 
 import cls from './MessageInput.module.scss';
 
@@ -11,10 +12,10 @@ interface MessageInputProps {
   chatId: string;
 }
 
-export const MessageInput = memo(
+export const MessageInput = React.memo(
   ({ sendMessage, chatId }: MessageInputProps) => {
-    const [message, setMessage] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
+    const [message, setMessage] = React.useState('');
+    const [isTyping, setIsTyping] = React.useState(false);
 
     const sendMessageHandler = () => {
       sendMessage(message);
@@ -28,7 +29,7 @@ export const MessageInput = memo(
       }
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
       socket.on(
         'message:typing',
         (payload: { isTyping: boolean; userId: number }) => {
@@ -38,14 +39,9 @@ export const MessageInput = memo(
     }, []);
 
     return (
-      <Stack alignItems='center' spacing={1} className={cls.inputContainer}>
+      <Flex align='center' gap='8' className={cls.InputMessageContainer}>
         {isTyping && <p>Typing</p>}
-        <Stack
-          direction='row'
-          spacing={1}
-          useFlexGap
-          className={cls.messageInput}
-        >
+        <Flex direction='row' gap='8' className={cls.MessageInput}>
           <TextField
             fullWidth
             id='outlined-multiline-flexible'
@@ -72,8 +68,8 @@ export const MessageInput = memo(
           <Button onClick={sendMessageHandler} disabled={!message}>
             <SendIcon />
           </Button>
-        </Stack>
-      </Stack>
+        </Flex>
+      </Flex>
     );
   },
 );

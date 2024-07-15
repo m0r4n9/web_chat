@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
-import { Stack } from '@/components/ui/Stack';
+import { Flex } from '@/components/ui/Flex';
 import { UserContext } from '@/context/user';
 
 import cls from './SidenavLayout.module.scss';
@@ -40,7 +40,7 @@ export const SidenavLayout = () => {
 
   return (
     <div className={cls.main}>
-      <Stack
+      <Flex
         as='main'
         direction='row'
         gap='12'
@@ -49,7 +49,7 @@ export const SidenavLayout = () => {
       >
         <ChatNavigation />
         <Outlet />
-      </Stack>
+      </Flex>
     </div>
   );
 };

@@ -2,7 +2,7 @@
   display: block;
   overflow-y: scroll;
   scrollbar-width: thin;
-  height: 500px;
+  height: calc(100vh - 60px);
 
   animation: appear 0.3s ease;
 }

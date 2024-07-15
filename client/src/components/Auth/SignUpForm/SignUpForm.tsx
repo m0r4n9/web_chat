@@ -2,7 +2,7 @@ import { Button, Paper } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
-import { Stack } from '@/components/ui/Stack';
+import { Flex } from '@/components/ui/Flex';
 import { usePostSignUpMutation } from '@/utils/api';
 
 import cls from '../AuthForm.module.scss';
@@ -60,7 +60,7 @@ export const SignUpForm = ({ toggleStage }: SignUpFormProps) => {
           }}
         />
 
-        <Stack gap='12' direction='column'>
+        <Flex gap='12' direction='column'>
           {signUp.isError && <div>{signUp.error.response?.data.message}</div>}
           <Button type='submit' variant='contained'>
             Зарегистрироваться
@@ -68,7 +68,7 @@ export const SignUpForm = ({ toggleStage }: SignUpFormProps) => {
           <Button type='button' onClick={toggleStage}>
             Войти в аккаунт
           </Button>
-        </Stack>
+        </Flex>
       </form>
     </Paper>
   );

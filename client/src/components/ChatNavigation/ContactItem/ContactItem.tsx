@@ -1,7 +1,7 @@
-import { Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { ColorAvatar } from '@/components/ColorAvatar';
+import { Flex } from '@/components/ui/Flex';
 
 import cls from '../ChatNavigation.module.scss';
 
@@ -19,17 +19,17 @@ export const ContactItem = ({ contact, chatId }: ContactItemProps) => {
       to={`/chat/${contact.chatId}`}
       className={`${cls.item} ${chatId === Number(contact.chatId) ? cls.active : ''}`}
     >
-      <Stack direction='row' alignItems='center' spacing={2}>
+      <Flex direction='row' align='center' gap='8'>
         <ColorAvatar username={contact.username} />
-        <Stack direction='column' alignItems='start'>
+        <Flex direction='column' align='start'>
           <span>{contact.username}</span>
           <span style={{ color: '#939393' }}>
             {isCutMessage
               ? `${contact.message.slice(0, 10)}...`
               : contact.message}
           </span>
-        </Stack>
-      </Stack>
+        </Flex>
+      </Flex>
     </Link>
   );
 };

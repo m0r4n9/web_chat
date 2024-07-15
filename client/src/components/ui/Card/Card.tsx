@@ -10,3 +10,5 @@ export const Card = (props: CardProps) => {
   const { className } = props;
   return <div className={classNames(cls.Card, {}, [className])}></div>;
 };
+
+Card.displayName = 'Card';

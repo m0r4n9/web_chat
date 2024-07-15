@@ -3,9 +3,10 @@ import { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { socket } from '@/api';
-import { HamburgerIcon } from '@/assets/icons';
+import { HamburgerIcon, SearchIcon } from '@/assets/icons';
 import { ContactItem } from '@/components/ChatNavigation';
-import { Stack } from '@/components/ui/Stack';
+import { Flex } from '@/components/ui/Flex';
+import { Input } from '@/components/ui/Input';
 import { UserContext } from '@/context/user';
 import { useGetContactsQuery } from '@/utils/api';
 
@@ -40,20 +41,30 @@ export const ChatNavigation = () => {
 
   return (
     <div className={cls.ChatNavigation}>
-      <Stack direction='row' gap='8'>
-        <HamburgerIcon width={40} height={40} />
+      <Flex
+        direction='row'
+        align='center'
+        gap='8'
+        className={cls.navigationHeader}
+      >
+        <Flex align='center' justify='center'>
+          <HamburgerIcon width='2.5rem' height='2.5rem' />
+        </Flex>
 
-        <div
-          style={{
-            width: '100%',
-          }}
-        >
-          <input />
-        </div>
-      </Stack>
+        <Flex max className={cls.Search}>
+          <SearchIcon className={cls.SearchIcon} />
+          <Input placeholder='Поиск...' className={cls.input} />
+        </Flex>
+      </Flex>
 
       <div className={cls.scrollContainer}>
-        <ul className={cls.contactsList}>
+        <Flex
+          as='ul'
+          direction='column'
+          gap='8'
+          max
+          className={cls.contactsList}
+        >
           {contacts?.map((contact) => (
             <ContactItem
               key={contact.id}
@@ -61,7 +72,7 @@ export const ChatNavigation = () => {
               chatId={Number(chatId)}
             />
           ))}
-        </ul>
+        </Flex>
       </div>
     </div>
   );

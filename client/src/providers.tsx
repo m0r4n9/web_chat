@@ -16,7 +16,7 @@ export const Providers = ({ children, user, query }: ProviderProps) => {
     <UserProvider {...user}>
       <MaterialThemeProvider>
         <QueryProvider {...query}>
-          <ReactQueryDevtools initialIsOpen={true} />
+          <ReactQueryDevtools initialIsOpen={false} />
           {children}
         </QueryProvider>
       </MaterialThemeProvider>

@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
-import { Stack } from '@/components/ui/Stack';
+import { Flex } from '@/components/ui/Flex';
 import { UserContext } from '@/context/user';
 import { usePostSignInMutation } from '@/utils/api';
 
@@ -60,7 +60,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
           rules={{ required: 'Это поле обязательно' }}
         />
 
-        <Stack gap='12' direction='column'>
+        <Flex gap='12' direction='column'>
           {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
           <Button type='submit' variant='contained'>
             Войти
@@ -68,7 +68,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
           <Button type='button' onClick={toggleStage}>
             Нет аккаунта? Зарегистрироваться'
           </Button>
-        </Stack>
+        </Flex>
       </form>
     </Paper>
   );
