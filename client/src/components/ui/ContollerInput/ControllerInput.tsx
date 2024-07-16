@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { HTMLInputTypeAttribute } from 'react';
+import * as React from 'react';
 import {
   Control,
   Controller,
@@ -16,7 +16,7 @@ interface FormInputControllerProps<T extends FieldValues>
   name: FieldPath<T>;
   control: Control<T>;
   defaultValue?: T[keyof T];
-  type?: HTMLInputTypeAttribute;
+  type?: React.HTMLInputTypeAttribute;
   inputVariant?: TextFieldVariants;
   rules?: RegisterOptions;
   label: string;

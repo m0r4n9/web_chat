@@ -1,6 +1,4 @@
 import ChatService from '../services/chat-service.js';
-import { User, ChatMember, Message } from '../models/index.js';
-import { Op } from 'sequelize';
 
 class ChatController {
   async createChat(req, res, next) {
@@ -13,7 +11,7 @@ class ChatController {
     }
   }
 
-  async getChatUsers(req, res) {
+  async getUserContacts(req, res) {
     const userId = req.params.userId;
 
     if (isNaN(userId)) {
@@ -21,68 +19,8 @@ class ChatController {
     }
 
     try {
-      const chats = await ChatMember.findAll({
-        where: {
-          userId,
-        },
-        attributes: ['chatId'],
-        raw: true,
-      });
-
-      const chatsId = chats.map((chat) => chat.chatId);
-
-      const chatUsers = await ChatMember.findAll({
-        where: {
-          chatId: {
-            [Op.in]: chatsId,
-          },
-          userId: {
-            [Op.ne]: userId,
-          },
-        },
-        attributes: ['userId', 'chatId'],
-      });
-
-      const usersId = chatUsers.map((user) => user.userId);
-
-      const users = await User.findAll({
-        attributes: ['id', 'username'],
-        raw: true,
-        where: {
-          id: {
-            [Op.in]: usersId,
-          },
-        },
-      });
-
-      const userMap = {};
-      users.forEach((user) => {
-        userMap[user.id] = user;
-      });
-
-      const result = [];
-      for (let i = 0; i < chatUsers.length; i++) {
-        const user = userMap[chatUsers[i].userId];
-        const message = await Message.findOne({
-          where: {
-            chatId: chatUsers[i].chatId,
-          },
-          limit: 1,
-          order: [['messageId', 'DESC']],
-          raw: true,
-        });
-
-        if (!message) continue;
-
-        console.log('Message: ', message);
-
-        result.push({
-          ...user,
-          message: message.content,
-          chatId: chatUsers[i].chatId,
-        });
-      }
-      return res.json(result);
+      const contacts = await ChatService.getUserContacts(userId);
+      return res.json(contacts);
     } catch (error) {
       console.error('Error fetching contacts:', error);
       res.status(500).json({ error: 'An error occurred' });
@@ -104,10 +42,12 @@ class ChatController {
     }
   }
 
-  async getChatMembers(req, res, next) {
+  async getChatData(req, res, next) {
     const chatId = req.params.chatId;
+    const { refreshToken } = req.cookies;
+
     try {
-      const members = await ChatService.getChatMembers(chatId);
+      const members = await ChatService.getChatData(chatId, refreshToken);
       return res.json(members);
     } catch (error) {
       next(error);

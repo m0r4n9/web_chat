@@ -1,11 +1,10 @@
 import { Button, Paper } from '@mui/material';
-import { useContext } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
 import { Flex } from '@/components/ui/Flex';
-import { UserContext } from '@/context/user';
+import { useUser } from '@/context/user';
 import { usePostSignInMutation } from '@/utils/api';
 
 import cls from '../AuthForm.module.scss';
@@ -22,7 +21,7 @@ type SignInFormProps = {
 export const SignInForm = ({ toggleStage }: SignInFormProps) => {
   const navigate = useNavigate();
   const signIn = usePostSignInMutation();
-  const userContext = useContext(UserContext);
+  const userContext = useUser();
 
   const { handleSubmit, control } = useForm<SignInFields>({
     defaultValues: {

@@ -1,14 +1,21 @@
 .wrapper {
-  display: block;
+  width: 100%;
+
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: thin;
-  height: calc(100vh - 60px);
+  transition: scrollbar-color .3s ease;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+
+  padding: 0 0.1rem 0.5rem 1rem;
 
   animation: appear 0.3s ease;
 }
 
-
 .list {
+  max-width: var(--width-chat);
+  margin: 0 auto;
   padding-right: 14px;
 }
 

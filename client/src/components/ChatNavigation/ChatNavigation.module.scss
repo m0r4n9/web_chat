@@ -3,20 +3,24 @@
   min-width: 320px;
   height: 100svh;
   overflow: hidden;
-
-  background: black;
 }
 
 .item {
   width: 100%;
   cursor: pointer;
-  padding: 4px 6px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color .15s ease;
+
+  &:hover {
+    background-color: var(--hint-color-hover);
+  }
+
+  &.active {
+    background-color: var(--hint-color);
+  }
 }
 
-.active {
-  background-color: #565656;
-  border-radius: 6px;
-}
 
 .contactsList {
   margin-top: 14px;
@@ -41,7 +45,8 @@
   scrollbar-width: thin;
 }
 
-.navigationHeader {
+.NavigationHeader {
+  height: var(--header);
   padding: 0.6rem 0.75rem;
 
   .Search {
@@ -70,6 +75,4 @@
       }
     }
   }
-
-
 }

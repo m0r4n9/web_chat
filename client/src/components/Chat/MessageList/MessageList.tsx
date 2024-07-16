@@ -1,5 +1,5 @@
 import { CircularProgress, Stack } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import * as React from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { Message } from '@/components/Message';
@@ -14,9 +14,9 @@ export const MessageList = ({
   userId: number;
   chatId: number;
 }) => {
-  const messagesElement = useRef<HTMLDivElement>(null);
-  const scrollPositionRef = useRef(0);
-  const scrollHeightBeforeFetch = useRef(0);
+  const messagesElement = React.useRef<HTMLDivElement>(null);
+  const scrollPositionRef = React.useRef(0);
+  const scrollHeightBeforeFetch = React.useRef(0);
   const { ref, inView } = useInView({
     threshold: 0,
   });
@@ -24,7 +24,7 @@ export const MessageList = ({
   const { data, isSuccess, isPending, isFetchingNextPage, fetchNextPage } =
     useMessagesQuery(chatId);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (inView) {
       const container = messagesElement.current;
       if (container) {
@@ -35,7 +35,7 @@ export const MessageList = ({
     }
   }, [inView, fetchNextPage]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const container = messagesElement.current;
     if (container && data) {
       const newItemsHeight =

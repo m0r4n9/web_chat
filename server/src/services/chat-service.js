@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
-import { Chat, ChatMember, Message } from '../models/index.js';
+import { Chat, ChatMember, Message, User } from '../models/index.js';
 import ApiError from '../exceptions/api-error.js';
+import TokenService from './token-service.js';
 
 class ChatService {
   async createChat(currentUserId, userId) {
@@ -53,8 +54,72 @@ class ChatService {
     return chatData.chatId;
   }
 
+  async getUserContacts(userId) {
+    const chats = await ChatMember.findAll({
+      where: {
+        userId,
+      },
+      attributes: ['chatId'],
+      raw: true,
+    });
+
+    const chatsId = chats.map((chat) => chat.chatId);
+
+    const chatUsers = await ChatMember.findAll({
+      where: {
+        chatId: {
+          [Op.in]: chatsId,
+        },
+        userId: {
+          [Op.ne]: userId,
+        },
+      },
+      attributes: ['userId', 'chatId'],
+    });
+
+    const usersId = chatUsers.map((user) => user.userId);
+
+    const users = await User.findAll({
+      attributes: ['id', 'username'],
+      raw: true,
+      where: {
+        id: {
+          [Op.in]: usersId,
+        },
+      },
+    });
+
+    const userMap = {};
+    users.forEach((user) => {
+      userMap[user.id] = user;
+    });
+
+    const result = [];
+    for (let i = 0; i < chatUsers.length; i++) {
+      const user = userMap[chatUsers[i].userId];
+      const message = await Message.findOne({
+        where: {
+          chatId: chatUsers[i].chatId,
+        },
+        limit: 1,
+        order: [['messageId', 'DESC']],
+        raw: true,
+      });
+
+      if (!message) continue;
+
+      result.push({
+        ...user,
+        message: message.content,
+        chatId: chatUsers[i].chatId,
+      });
+    }
+
+    return result;
+  }
+
   async getMessages({ chatId, page = 1 }) {
-    const limit = 15;
+    const limit = 30;
     const offset = (parseInt(page) - 1) * limit;
 
     const chat = await Chat.findByPk(chatId);
@@ -86,15 +151,47 @@ class ChatService {
     };
   }
 
-  async getChatMembers(chatId) {
+  async getChatData(chatId, refreshToken) {
+    const user = TokenService.validateRefreshToken(refreshToken);
+
     const members = await ChatMember.findAll({
       where: {
         chatId,
+        userId: user.id,
       },
       attributes: ['userId'],
       raw: true,
     });
-    return members;
+
+    const access = !!members.length;
+
+    if (!access)
+      return {
+        access: false,
+      };
+
+    console.log(user);
+
+    const member = await ChatMember.findOne({
+      where: {
+        chatId,
+        userId: {
+          [Op.ne]: user.id,
+        },
+      },
+      attributes: ['userId'],
+      raw: true
+    });
+
+    const interlocutor = await User.findByPk(member.userId, {
+      attributes: ['username'],
+      raw: true,
+    });
+
+    return {
+      access: true,
+      interlocutor,
+    };
   }
 
   async getUserChats(userId) {

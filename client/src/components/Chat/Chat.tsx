@@ -3,15 +3,17 @@ import {
   QueryClient,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useCallback, useContext, useEffect } from 'react';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { socket } from '@/api';
 import { MessageList } from '@/components/Chat/MessageList/MessageList.tsx';
-import { UserContext } from '@/context/user';
-import { useGetChatMembers } from '@/utils/api';
+import { Flex } from '@/components/ui/Flex';
+import { useUser } from '@/context/user';
+import { useGetDataChat } from '@/utils/api';
 
 import cls from './Chat.module.scss';
+import { ChatHeader } from './ChatHeader/ChatHeader.tsx';
 import { MessageInput } from './MessageInput/MessageInput';
 
 function addMessage({
@@ -53,19 +55,19 @@ function addMessage({
 
 export const Chat = ({ chatId }: { chatId: string }) => {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  const { data: members } = useGetChatMembers(chatId);
+  const { user } = useUser();
+  const { data: chatData } = useGetDataChat(chatId);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (members && !members.find((member) => member.userId === user.id)) {
+  React.useEffect(() => {
+    if (chatData && !chatData.access) {
       navigate('/', {
         replace: true,
       });
     }
-  }, [members, navigate, user.id]);
+  }, [chatData, navigate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     socket.on('message:sent', (message: Message) => {
       if (chatId === message.chatId.toString()) {
         addMessage({ queryClient, chatId, message });
@@ -73,7 +75,7 @@ export const Chat = ({ chatId }: { chatId: string }) => {
     });
   }, [chatId, queryClient]);
 
-  const sendMessage = useCallback(
+  const sendMessage = React.useCallback(
     (newMessage: string) => {
       if (newMessage.trim()) {
         const message = {
@@ -91,9 +93,12 @@ export const Chat = ({ chatId }: { chatId: string }) => {
   );
 
   return (
-    <div className={cls.Chat}>
-      <MessageList userId={user.id} chatId={Number(chatId)} />
-      <MessageInput sendMessage={sendMessage} chatId={chatId} />
-    </div>
+    <Flex direction='column' align='center' max className={cls.Chat}>
+      <ChatHeader interlocutor={chatData?.interlocutor} />
+      <Flex direction='column' max className={cls.MessageContainer}>
+        <MessageList userId={user.id} chatId={Number(chatId)} />
+        <MessageInput sendMessage={sendMessage} chatId={chatId} />
+      </Flex>
+    </Flex>
   );
 };

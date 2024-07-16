@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import * as React from 'react';
 
 import { SignInForm } from './SignInForm/SignInForm.tsx';
 import { SignUpForm } from './SignUpForm/SignUpForm.tsx';
@@ -6,9 +6,9 @@ import { SignUpForm } from './SignUpForm/SignUpForm.tsx';
 type AuthStage = 'signIn' | 'signUp';
 
 export const FormContainer = () => {
-  const [stage, setStage] = useState<AuthStage>('signIn');
+  const [stage, setStage] = React.useState<AuthStage>('signIn');
 
-  const toggleStage = useCallback(
+  const toggleStage = React.useCallback(
     () =>
       setStage((prevState) => (prevState === 'signIn' ? 'signUp' : 'signIn')),
     [],

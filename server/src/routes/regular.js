@@ -8,9 +8,9 @@ export const router = new Router();
 router.get('/users/:userId', UserController.getUsers);
 
 router.post('/chat', ChatController.createChat);
-router.get('/chat/:userId', ChatController.getChatUsers);
+router.get('/chat/:userId', ChatController.getUserContacts);
 router.get('/messages/:chatId', ChatController.getMessages);
-router.get('/chat/members/:chatId', ChatController.getChatMembers);
+router.get('/chat/:chatId/check-access', ChatController.getChatData);
 router.get('/chats/:userId', ChatController.getUserChats);
 
 router.post('/login', UserController.login);

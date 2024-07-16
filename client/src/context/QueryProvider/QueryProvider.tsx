@@ -1,9 +1,9 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ComponentProps, ReactNode } from 'react';
+import * as React from 'react';
 
 export interface QueryProviderProps
-  extends ComponentProps<typeof QueryClientProvider> {
-  children: ReactNode;
+  extends React.ComponentProps<typeof QueryClientProvider> {
+  children: React.ReactNode;
 }
 
 export const QueryProvider = ({ children, client }: QueryProviderProps) => {

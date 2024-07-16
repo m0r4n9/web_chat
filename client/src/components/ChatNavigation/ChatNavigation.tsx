@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useContext, useEffect } from 'react';
+import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { socket } from '@/api';
@@ -7,18 +7,18 @@ import { HamburgerIcon, SearchIcon } from '@/assets/icons';
 import { ContactItem } from '@/components/ChatNavigation';
 import { Flex } from '@/components/ui/Flex';
 import { Input } from '@/components/ui/Input';
-import { UserContext } from '@/context/user';
+import { useUser } from '@/context/user';
 import { useGetContactsQuery } from '@/utils/api';
 
 import cls from './ChatNavigation.module.scss';
 
 export const ChatNavigation = () => {
   const { chatId } = useParams();
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { data: contacts } = useGetContactsQuery(user.id);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleMessage = (message: Message) => {
       queryClient.setQueryData(['contacts'], (oldData: Contact[]) => {
         if (!oldData) return;
@@ -45,7 +45,7 @@ export const ChatNavigation = () => {
         direction='row'
         align='center'
         gap='8'
-        className={cls.navigationHeader}
+        className={cls.NavigationHeader}
       >
         <Flex align='center' justify='center'>
           <HamburgerIcon width='2.5rem' height='2.5rem' />

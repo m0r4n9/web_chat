@@ -6,6 +6,11 @@ interface User {
   accessToken?: string;
 }
 
+interface Interlocutor {
+  username: string;
+  lastVisit?: string;
+}
+
 interface Message {
   id: number;
   chatId: number;

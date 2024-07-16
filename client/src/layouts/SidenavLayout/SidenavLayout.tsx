@@ -1,19 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
 import { Flex } from '@/components/ui/Flex';
-import { UserContext } from '@/context/user';
+import { useUser } from '@/context/user';
 
 import cls from './SidenavLayout.module.scss';
 
 export const SidenavLayout = () => {
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const { setUser } = useUser();
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const check = async () => {
       if (localStorage.getItem('token')) {
         const response = await $api.get<User>('/refresh');
@@ -40,13 +40,7 @@ export const SidenavLayout = () => {
 
   return (
     <div className={cls.main}>
-      <Flex
-        as='main'
-        direction='row'
-        gap='12'
-        align='stretch'
-        className='wrapper'
-      >
+      <Flex as='main' direction='row' align='stretch' className={cls.wrapper}>
         <ChatNavigation />
         <Outlet />
       </Flex>

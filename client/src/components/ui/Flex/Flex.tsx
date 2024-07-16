@@ -1,9 +1,4 @@
-import {
-  ComponentPropsWithoutRef,
-  CSSProperties,
-  ElementType,
-  ReactNode,
-} from 'react';
+import * as React from 'react';
 
 import { classNames, Mods } from '@/utils/lib/ClassNames';
 
@@ -55,23 +50,25 @@ const gapClasses: Record<FlexGap, string> = {
   48: cls.gap48,
 };
 
-type DynamicTagProps<T extends ElementType> = {
+type DynamicTagProps<T extends React.ElementType> = {
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & React.ComponentPropsWithoutRef<T>;
 
-type FlexProps<T extends ElementType> = DynamicTagProps<T> & {
+type FlexProps<T extends React.ElementType> = DynamicTagProps<T> & {
   className?: string;
-  children: ReactNode;
+  children: React.ReactNode;
   justify?: FlexJustify;
   align?: FlexAlign;
   direction?: FlexDirection;
   wrap?: FlexWrap;
   gap?: FlexGap;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
   max?: boolean;
 };
 
-export const Flex = <T extends ElementType = 'div'>(props: FlexProps<T>) => {
+export const Flex = <T extends React.ElementType = 'div'>(
+  props: FlexProps<T>,
+) => {
   const {
     as: Component = 'div',
     className,

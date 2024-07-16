@@ -1,8 +1,10 @@
 .Chat {
   position: relative;
 
-  width: 100%;
-  height: inherit;
-  padding: 10px;
+  background: var(--bacground-color);
 }
 
+.MessageContainer {
+  width: 100%;
+  height: calc(100svh - var(--header));
+}

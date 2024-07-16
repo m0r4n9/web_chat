@@ -1,8 +1,8 @@
 import { Box, Button, Modal, Stack } from '@mui/material';
-import { useContext, useState } from 'react';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '@/context/user';
+import { useUser } from '@/context/user';
 import { useGetUnmessagedUsers, usePostCreateChatMutation } from '@/utils/api';
 
 import { ColorAvatar } from '../ColorAvatar';
@@ -24,8 +24,8 @@ type UserOmit = Omit<User, 'accessToken'>;
 
 const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  const [open, setOpen] = useState(false);
+  const { user } = useUser();
+  const [open, setOpen] = React.useState(false);
   const createChatMutation = usePostCreateChatMutation();
 
   const handleOpen = () => setOpen(true);
@@ -82,7 +82,7 @@ const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
 };
 
 export const CreateChat = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { data: users } = useGetUnmessagedUsers(user.id);
 
   return (

@@ -1,12 +1,21 @@
 @import "reset.css";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: black;
+
+  --hint-color: rgb(39, 39, 42);
+  --hint-color-hover: rgba(39, 39, 42, 0.5);
+
+  --bacground-color: #121212;
+
+  --header: 3.5rem;
+
+  --width-chat: 60rem;
 }
 
