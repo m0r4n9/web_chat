@@ -1,3 +1,4 @@
+import { Text } from '@mantine/core';
 import clsx from 'clsx';
 
 import cls from './Message.module.scss';
@@ -12,7 +13,7 @@ export const Message = (props: MessageProps) => {
 
   return (
     <div className={clsx(cls.message, isMine && `${cls.isMine}`)}>
-      {message}
+      <Text>{message}</Text>
     </div>
   );
 };

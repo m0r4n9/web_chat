@@ -1,12 +1,12 @@
+import { Box, Flex, TextInput } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { socket } from '@/api';
-import { HamburgerIcon, SearchIcon } from '@/assets/icons';
+import { SearchIcon } from '@/assets/icons';
 import { ContactItem } from '@/components/ChatNavigation';
-import { Flex } from '@/components/ui/Flex';
-import { Input } from '@/components/ui/Input';
+import { SettingsMenu } from '@/components/SettingsMenu';
 import { useUser } from '@/context/user';
 import { useGetContactsQuery } from '@/utils/api';
 
@@ -15,6 +15,7 @@ import cls from './ChatNavigation.module.scss';
 export const ChatNavigation = () => {
   const { chatId } = useParams();
   const { user } = useUser();
+
   const { data: contacts } = useGetContactsQuery(user.id);
   const queryClient = useQueryClient();
 
@@ -40,29 +41,26 @@ export const ChatNavigation = () => {
   }, [queryClient]);
 
   return (
-    <div className={cls.ChatNavigation}>
-      <Flex
-        direction='row'
-        align='center'
-        gap='8'
-        className={cls.NavigationHeader}
-      >
-        <Flex align='center' justify='center'>
-          <HamburgerIcon width='2.5rem' height='2.5rem' />
-        </Flex>
+    <Box bg='backgroundColor' className={cls.ChatNavigation}>
+      <Flex direction='row' align='center' className={cls.NavigationHeader}>
+        {/*<Burger opened={false} aria-label='Toggle settings' />*/}
+        <SettingsMenu />
 
-        <Flex max className={cls.Search}>
-          <SearchIcon className={cls.SearchIcon} />
-          <Input placeholder='Поиск...' className={cls.input} />
-        </Flex>
+        <TextInput
+          variant='filled'
+          size='sm'
+          radius='lg'
+          placeholder='Поиск...'
+          leftSection={<SearchIcon />}
+          className={cls.SearchInput}
+        />
       </Flex>
 
       <div className={cls.scrollContainer}>
         <Flex
-          as='ul'
+          component='ul'
           direction='column'
-          gap='8'
-          max
+          gap='sm'
           className={cls.contactsList}
         >
           {contacts?.map((contact) => (
@@ -74,6 +72,6 @@ export const ChatNavigation = () => {
           ))}
         </Flex>
       </div>
-    </div>
+    </Box>
   );
 };

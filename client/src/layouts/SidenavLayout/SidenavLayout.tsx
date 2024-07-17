@@ -1,9 +1,9 @@
+import { Flex } from '@mantine/core';
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { $api } from '@/api';
 import { ChatNavigation } from '@/components/ChatNavigation';
-import { Flex } from '@/components/ui/Flex';
 import { useUser } from '@/context/user';
 
 import cls from './SidenavLayout.module.scss';
@@ -40,7 +40,12 @@ export const SidenavLayout = () => {
 
   return (
     <div className={cls.main}>
-      <Flex as='main' direction='row' align='stretch' className={cls.wrapper}>
+      <Flex
+        component='main'
+        direction='row'
+        align='stretch'
+        className={cls.wrapper}
+      >
         <ChatNavigation />
         <Outlet />
       </Flex>

@@ -1,11 +1,11 @@
-import { Stack } from '@mui/material';
+import { Flex } from '@mantine/core';
 
 import { FormContainer } from '@/components/Auth';
 
 export const AuthPage = () => {
   return (
-    <Stack justifyContent='center' alignItems='center' height={'50vh'}>
+    <Flex justify='center' align='center' style={{ height: '50svh' }}>
       <FormContainer />
-    </Stack>
+    </Flex>
   );
 };

@@ -1,6 +1,6 @@
 .InputMessageContainer {
   width: var(--width-chat);
-  height: 80px;
+  height: auto;
   margin: 0 auto;
 
   padding: 0.5rem;
@@ -12,5 +12,9 @@
   //bottom: 0;
   //left: 0;
   padding: 0.75rem 0;
+  width: 100%;
+}
+
+.Textarea {
   width: 100%;
 }

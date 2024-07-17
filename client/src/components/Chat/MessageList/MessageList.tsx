@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from '@mui/material';
+import { Flex, Loader, ScrollArea } from '@mantine/core';
 import * as React from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -49,21 +49,27 @@ export const MessageList = ({
   if (isPending) {
     return (
       <div className={cls.wrapper} ref={messagesElement} key='messages-chat'>
-        <Stack alignItems='center' justifyContent='center' height='100%'>
-          <CircularProgress />
-        </Stack>
+        <Flex align='center' content='center'>
+          <Loader />
+        </Flex>
       </div>
     );
   }
 
   return (
-    <div className={cls.wrapper} ref={messagesElement} key='messages-chat'>
-      <Stack spacing={1} className={cls.list}>
+    <ScrollArea.Autosize
+      className={cls.wrapper}
+      ref={messagesElement}
+      type='auto'
+      scrollbars='y'
+      key='messages-chat'
+    >
+      <Flex gap='sm' direction='column' className={cls.list}>
         <div ref={ref}></div>
         {isFetchingNextPage && (
-          <Stack alignItems='center'>
-            <CircularProgress />
-          </Stack>
+          <Flex align='center'>
+            <Loader />
+          </Flex>
         )}
         {isSuccess &&
           data.pages.map((messages, i) =>
@@ -75,7 +81,7 @@ export const MessageList = ({
               />
             )),
           )}
-      </Stack>
-    </div>
+      </Flex>
+    </ScrollArea.Autosize>
   );
 };

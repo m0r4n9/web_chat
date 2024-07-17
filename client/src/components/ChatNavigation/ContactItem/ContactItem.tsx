@@ -1,7 +1,7 @@
+import { Flex, Text, useMantineTheme } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
 import { ColorAvatar } from '@/components/ColorAvatar';
-import { Flex } from '@/components/ui/Flex';
 
 import cls from '../ChatNavigation.module.scss';
 
@@ -11,6 +11,7 @@ interface ContactItemProps {
 }
 
 export const ContactItem = ({ contact, chatId }: ContactItemProps) => {
+  const theme = useMantineTheme();
   const isCutMessage = contact.message.length > 10;
 
   return (
@@ -22,12 +23,12 @@ export const ContactItem = ({ contact, chatId }: ContactItemProps) => {
       <Flex direction='row' align='center' gap='8'>
         <ColorAvatar username={contact.username} />
         <Flex direction='column' align='start'>
-          <span>{contact.username}</span>
-          <span style={{ color: '#939393' }}>
+          <Text>{contact.username}</Text>
+          <Text c={theme.colors.dark[2]} span>
             {isCutMessage
               ? `${contact.message.slice(0, 10)}...`
               : contact.message}
-          </span>
+          </Text>
         </Flex>
       </Flex>
     </Link>

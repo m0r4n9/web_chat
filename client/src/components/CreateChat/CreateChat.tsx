@@ -1,4 +1,4 @@
-import { Box, Button, Modal, Stack } from '@mui/material';
+import { Box, Button, Flex, Modal } from '@mantine/core';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,19 +6,6 @@ import { useUser } from '@/context/user';
 import { useGetUnmessagedUsers, usePostCreateChatMutation } from '@/utils/api';
 
 import { ColorAvatar } from '../ColorAvatar';
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'black',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  overflow: 'hidden',
-};
 
 type UserOmit = Omit<User, 'accessToken'>;
 
@@ -45,39 +32,39 @@ const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
   };
 
   return (
-    <div>
+    <Box>
       <Button onClick={handleOpen}>Выбрать пользователя</Button>
       <Modal
-        open={open}
+        opened={open}
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Box sx={style}>
+        <Box>
           <h2>Выберите пользователя</h2>
-          <Stack spacing={1}>
+          <Flex gap='sm'>
             {users?.length ? (
               users.map((user) => (
-                <Stack
+                <Flex
                   key={user.id}
                   direction='row'
-                  justifyContent='space-between'
-                  alignItems='center'
+                  justify='space-between'
+                  align='center'
                 >
                   <ColorAvatar username={user.username} />
                   <span>{user.username}</span>
                   <Button onClick={() => handleStartChat(user.id)}>
                     Написать
                   </Button>
-                </Stack>
+                </Flex>
               ))
             ) : (
               <div>Нет пользователей, которым можно написать</div>
             )}
-          </Stack>
+          </Flex>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 };
 
@@ -86,17 +73,13 @@ export const CreateChat = () => {
   const { data: users } = useGetUnmessagedUsers(user.id);
 
   return (
-    <Stack
-      alignContent='center'
-      alignItems='center'
-      style={{ width: '100%', height: '100%' }}
-    >
+    <Flex justify='center' align='center' direction='column' gap='md' flex='1'>
       <h1>Выберите чат</h1>
 
-      <Stack>
+      <Flex direction='column' align='center' gap='sm'>
         <p>Начать диалог</p>
         <ModalUsers users={users} />
-      </Stack>
-    </Stack>
+      </Flex>
+    </Flex>
   );
 };

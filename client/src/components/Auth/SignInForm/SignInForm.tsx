@@ -1,9 +1,8 @@
-import { Button, Paper } from '@mui/material';
+import { Button, Flex, Paper } from '@mantine/core';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
-import { Flex } from '@/components/ui/Flex';
 import { useUser } from '@/context/user';
 import { usePostSignInMutation } from '@/utils/api';
 
@@ -43,7 +42,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
     }
   };
   return (
-    <Paper elevation={1} className={cls.wrapper}>
+    <Paper shadow='sm' className={cls.wrapper}>
       <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
         <ControllerInput
           name='email'
@@ -59,7 +58,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
           rules={{ required: 'Это поле обязательно' }}
         />
 
-        <Flex gap='12' direction='column'>
+        <Flex gap='md' direction='column'>
           {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
           <Button type='submit' variant='contained'>
             Войти

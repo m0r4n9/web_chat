@@ -1,8 +1,7 @@
-import { Button, Paper } from '@mui/material';
+import { Button, Flex, Paper } from '@mantine/core';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
-import { Flex } from '@/components/ui/Flex';
 import { usePostSignUpMutation } from '@/utils/api';
 
 import cls from '../AuthForm.module.scss';
@@ -32,7 +31,7 @@ export const SignUpForm = ({ toggleStage }: SignUpFormProps) => {
     await signUp.mutateAsync(data);
   };
   return (
-    <Paper elevation={1} className={cls.wrapper}>
+    <Paper className={cls.wrapper}>
       <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
         <ControllerInput
           name='email'
@@ -60,7 +59,7 @@ export const SignUpForm = ({ toggleStage }: SignUpFormProps) => {
           }}
         />
 
-        <Flex gap='12' direction='column'>
+        <Flex gap='md' direction='row'>
           {signUp.isError && <div>{signUp.error.response?.data.message}</div>}
           <Button type='submit' variant='contained'>
             Зарегистрироваться

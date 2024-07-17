@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextInput } from '@mantine/core';
 import * as React from 'react';
 import {
   Control,
@@ -28,7 +28,6 @@ export const ControllerInput = <T extends FieldValues>({
   control,
   rules,
   type,
-  label,
   inputVariant = 'outlined',
 }: FormInputControllerProps<T>) => {
   return (
@@ -37,15 +36,12 @@ export const ControllerInput = <T extends FieldValues>({
       control={control}
       rules={rules}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <TextField
-          helperText={error ? error.message : null}
+        <TextInput
+          error={error ? error.message : null}
           size='small'
-          error={Boolean(error)}
           onChange={onChange}
           type={type}
           value={value}
-          fullWidth
-          label={label}
           variant={inputVariant}
         />
       )}
