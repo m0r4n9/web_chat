@@ -1,4 +1,4 @@
-import { TextInput } from '@mantine/core';
+import { TextInput, TextInputProps } from '@mantine/core';
 import * as React from 'react';
 import {
   Control,
@@ -9,26 +9,22 @@ import {
   UseControllerProps,
 } from 'react-hook-form';
 
-type TextFieldVariants = 'outlined' | 'filled' | 'standard';
-
 interface FormInputControllerProps<T extends FieldValues>
-  extends UseControllerProps<T> {
+  extends UseControllerProps<T>,
+    Omit<TextInputProps, 'name' | 'control' | 'defaultValue'> {
   name: FieldPath<T>;
   control: Control<T>;
   defaultValue?: T[keyof T];
   type?: React.HTMLInputTypeAttribute;
-  inputVariant?: TextFieldVariants;
   rules?: RegisterOptions;
-  label: string;
-  placeholder?: string;
 }
 
 export const ControllerInput = <T extends FieldValues>({
   name,
   control,
   rules,
-  type,
-  inputVariant = 'outlined',
+  type = 'text',
+  ...textInputProps
 }: FormInputControllerProps<T>) => {
   return (
     <Controller
@@ -37,12 +33,11 @@ export const ControllerInput = <T extends FieldValues>({
       rules={rules}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <TextInput
+          {...textInputProps}
           error={error ? error.message : null}
-          size='small'
           onChange={onChange}
           type={type}
           value={value}
-          variant={inputVariant}
         />
       )}
     />

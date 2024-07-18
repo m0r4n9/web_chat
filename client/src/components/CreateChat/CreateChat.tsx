@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Modal } from '@mantine/core';
+import { Box, Button, Flex, Modal, useMantineTheme } from '@mantine/core';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,9 +71,19 @@ const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
 export const CreateChat = () => {
   const { user } = useUser();
   const { data: users } = useGetUnmessagedUsers(user.id);
+  const theme = useMantineTheme();
+
+  console.log('@', theme);
 
   return (
-    <Flex justify='center' align='center' direction='column' gap='md' flex='1'>
+    <Flex
+      bg='test'
+      justify='center'
+      align='center'
+      direction='column'
+      flex='1'
+      gap='md'
+    >
       <h1>Выберите чат</h1>
 
       <Flex direction='column' align='center' gap='sm'>

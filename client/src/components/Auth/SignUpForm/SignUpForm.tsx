@@ -1,4 +1,5 @@
-import { Button, Flex, Paper } from '@mantine/core';
+import { Anchor, Button, Divider, Group } from '@mantine/core';
+import { IconLock, IconMail, IconUser } from '@tabler/icons-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { ControllerInput } from '@/components/ui/ContollerInput';
@@ -31,44 +32,58 @@ export const SignUpForm = ({ toggleStage }: SignUpFormProps) => {
     await signUp.mutateAsync(data);
   };
   return (
-    <Paper className={cls.wrapper}>
-      <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
-        <ControllerInput
-          name='email'
-          control={control}
-          label='Электронная почта'
-          rules={{ required: 'Это поле обязательно' }}
-        />
-        <ControllerInput
-          name='password'
-          type='password'
-          control={control}
-          label='Пароль'
-          rules={{ required: 'Это поле обязательно' }}
-        />
-        <ControllerInput
-          name='username'
-          control={control}
-          label='Имя пользователя'
-          rules={{
-            required: 'Это поле обязательно',
-            minLength: {
-              value: 4,
-              message: 'Имя пользователя должно содержать минимум 4 символа',
-            },
-          }}
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
+      <Divider label='Регистрация' labelPosition='center' my='lg' />
+      <ControllerInput
+        name='email'
+        control={control}
+        label='Электронная почта'
+        placeholder='Введите почту'
+        rules={{ required: 'Это поле обязательно' }}
+        leftSection={<IconMail size={18} />}
+        leftSectionPointerEvents='none'
+      />
+      <ControllerInput
+        name='password'
+        type='password'
+        control={control}
+        label='Пароль'
+        placeholder='Введите пароль'
+        rules={{ required: 'Это поле обязательно' }}
+        leftSection={<IconLock size={18} />}
+        leftSectionPointerEvents='none'
+      />
+      <ControllerInput
+        name='username'
+        control={control}
+        label='Имя пользователя'
+        placeholder='Введите имя пользователя'
+        rules={{
+          required: 'Это поле обязательно',
+          minLength: {
+            value: 4,
+            message: 'Имя пользователя должно содержать минимум 4 символа',
+          },
+        }}
+        leftSection={<IconUser size={18} />}
+        leftSectionPointerEvents='none'
+      />
 
-        <Flex gap='md' direction='row'>
-          {signUp.isError && <div>{signUp.error.response?.data.message}</div>}
-          <Button type='submit' variant='contained'>
-            Зарегистрироваться
-          </Button>
-          <Button type='button' onClick={toggleStage}>
-            Войти в аккаунт
-          </Button>
-        </Flex>
-      </form>
-    </Paper>
+      <Group gap='md' justify='space-between'>
+        {signUp.isError && <div>{signUp.error.response?.data.message}</div>}
+        <Anchor
+          component='button'
+          type='button'
+          c='dimmed'
+          onClick={toggleStage}
+          size='xs'
+        >
+          Уже есть аккаунт? Войти
+        </Anchor>
+        <Button type='submit' variant='default'>
+          Зарегистрироваться
+        </Button>
+      </Group>
+    </form>
   );
 };

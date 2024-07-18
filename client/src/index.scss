@@ -1,0 +1,15 @@
+@import "reset.css";
+
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+
+  --header: 3.5rem;
+
+  --width-chat: 60rem;
+}
+
+body {
+  background: light-dark(var(--mantine-color-white),
+      var(--mantine-color-dark-9));
+}

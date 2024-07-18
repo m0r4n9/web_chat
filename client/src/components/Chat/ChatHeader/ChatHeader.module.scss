@@ -1,6 +1,7 @@
 .ChatHeader {
   width: 100%;
   height: var(--header);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
 
   padding: 0.2rem 0.3rem;
 }

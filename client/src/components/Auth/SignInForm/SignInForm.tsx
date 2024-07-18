@@ -1,4 +1,5 @@
-import { Button, Flex, Paper } from '@mantine/core';
+import { Anchor, Button, Divider, Group } from '@mantine/core';
+import { IconLock, IconMail } from '@tabler/icons-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,32 +43,43 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
     }
   };
   return (
-    <Paper shadow='sm' className={cls.wrapper}>
-      <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
-        <ControllerInput
-          name='email'
-          control={control}
-          label='Электронная почта'
-          rules={{ required: 'Это поле обязательно' }}
-        />
-        <ControllerInput
-          name='password'
-          type='password'
-          control={control}
-          label='Пароль'
-          rules={{ required: 'Это поле обязательно' }}
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
+      <Divider label='Авторизация' labelPosition='center' my='lg' />
+      <ControllerInput
+        name='email'
+        control={control}
+        label='Электронная почта'
+        placeholder='Введите почту'
+        rules={{ required: 'Это поле обязательно' }}
+        leftSection={<IconMail size={18} />}
+        leftSectionPointerEvents='none'
+      />
+      <ControllerInput
+        name='password'
+        type='password'
+        control={control}
+        label='Пароль'
+        placeholder='Введите пароль'
+        rules={{ required: 'Это поле обязательно' }}
+        leftSection={<IconLock size={18} />}
+        leftSectionPointerEvents='none'
+      />
 
-        <Flex gap='md' direction='column'>
-          {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
-          <Button type='submit' variant='contained'>
-            Войти
-          </Button>
-          <Button type='button' onClick={toggleStage}>
-            Нет аккаунта? Зарегистрироваться'
-          </Button>
-        </Flex>
-      </form>
-    </Paper>
+      <Group gap='md' justify='space-between'>
+        {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
+        <Anchor
+          component='button'
+          type='button'
+          c='dimmed'
+          onClick={toggleStage}
+          size='xs'
+        >
+          Нет аккаунта? Зарегистрироваться
+        </Anchor>
+        <Button type='submit' variant='default'>
+          Войти
+        </Button>
+      </Group>
+    </form>
   );
 };

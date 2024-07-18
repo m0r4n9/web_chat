@@ -1,8 +1,5 @@
-.Chat {
-  position: relative;
-}
-
 .MessageContainer {
   width: 100%;
   height: calc(100svh - var(--header));
+  background-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-8));
 }

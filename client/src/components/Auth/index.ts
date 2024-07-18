@@ -1,1 +1,1 @@
-export { FormContainer } from './FormContainer.tsx';
+export { AuthFormContainer } from './AuthFormContainer.tsx';

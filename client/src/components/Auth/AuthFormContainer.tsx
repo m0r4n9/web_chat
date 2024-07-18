@@ -1,11 +1,13 @@
+import { Paper } from '@mantine/core';
 import * as React from 'react';
 
+import cls from './AuthForm.module.scss';
 import { SignInForm } from './SignInForm/SignInForm.tsx';
 import { SignUpForm } from './SignUpForm/SignUpForm.tsx';
 
 type AuthStage = 'signIn' | 'signUp';
 
-export const FormContainer = () => {
+export const AuthFormContainer = () => {
   const [stage, setStage] = React.useState<AuthStage>('signIn');
 
   const toggleStage = React.useCallback(
@@ -14,9 +16,16 @@ export const FormContainer = () => {
     [],
   );
 
-  if (stage === 'signIn') {
-    return <SignInForm toggleStage={toggleStage} />;
-  }
+  const content =
+    stage === 'signIn' ? (
+      <SignInForm toggleStage={toggleStage} />
+    ) : (
+      <SignUpForm toggleStage={toggleStage} />
+    );
 
-  return <SignUpForm toggleStage={toggleStage} />;
+  return (
+    <Paper p='md' className={cls.wrapper}>
+      {content}
+    </Paper>
+  );
 };

@@ -8,12 +8,7 @@ interface ChatHeaderProps {
 
 export const ChatHeader = ({ interlocutor }: ChatHeaderProps) => {
   return (
-    <Flex
-      direction='column'
-      justify='center'
-      bg='backgroundColor'
-      className={cls.ChatHeader}
-    >
+    <Flex direction='column' justify='center' className={cls.ChatHeader}>
       <Flex align='center' gap='sm'>
         <Avatar name={interlocutor?.username} color='initials' />
         <Flex direction='column'>

@@ -1,7 +1,9 @@
 .ChatNavigation {
-  width: 35rem;
+  width: 27.5rem;
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
   min-width: 320px;
   height: 100svh;
+  border-right: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
   overflow: hidden;
 }
 
@@ -13,11 +15,11 @@
   transition: background-color .15s ease;
 
   &:hover {
-    background-color: var(--hint-color-hover);
+    background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7));
   }
 
   &.active {
-    background-color: var(--hint-color);
+    background-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   }
 }
 
@@ -45,16 +47,3 @@
   scrollbar-width: thin;
 }
 
-.NavigationHeader {
-  height: var(--header);
-  padding: 0.6rem 0.75rem;
-
-  .SearchInput {
-    flex: 2;
-    padding: 0 1.75rem;
-
-    &::placeholder {
-      color: inherit;
-    }
-  }
-}

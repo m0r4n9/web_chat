@@ -1,40 +1,34 @@
-import { createTheme, MantineProvider, virtualColor } from '@mantine/core';
 import * as React from 'react';
 
 import { QueryProvider, QueryProviderProps } from '@/context/QueryProvider';
 import { UserProvider, UserProviderProps } from '@/context/user';
 
+import {
+  MantineThemeProvider,
+  MantineThemeProviderProps,
+} from './context/MantineThemeProvider';
+
 export interface ProviderProps {
   children: React.ReactNode;
   user?: Omit<UserProviderProps, 'children'>;
   query: Omit<QueryProviderProps, 'children'>;
+  mantine?: Omit<MantineThemeProviderProps, 'children'>;
 }
 
-export const Providers = ({ children, user, query }: ProviderProps) => {
-  const theme = createTheme({
-    fontFamily: 'Inter, sans-serif',
-    colors: {
-      primary: virtualColor({
-        name: 'primary',
-        dark: 'dark',
-        light: 'cyan',
-      }),
-      backgroundColor: virtualColor({
-        name: 'backgroundColor',
-        dark: '#242424',
-        light: '#FFF',
-      }),
-    },
-  });
-
+export const Providers = ({
+  children,
+  user,
+  query,
+  mantine,
+}: ProviderProps) => {
   return (
     <UserProvider {...user}>
-      <MantineProvider theme={theme}>
-        <QueryProvider {...query}>
+      <QueryProvider {...query}>
+        <MantineThemeProvider {...mantine}>
           {/*<ReactQueryDevtools initialIsOpen={false} />*/}
           {children}
-        </QueryProvider>
-      </MantineProvider>
+        </MantineThemeProvider>
+      </QueryProvider>
     </UserProvider>
   );
 };

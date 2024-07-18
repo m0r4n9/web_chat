@@ -1,4 +1,4 @@
-import { Flex, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import {
   InfiniteData,
   QueryClient,
@@ -58,10 +58,6 @@ export const Chat = ({ chatId }: { chatId: string }) => {
   const { user } = useUser();
   const { data: chatData } = useGetDataChat(chatId);
   const queryClient = useQueryClient();
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const chatBackgroundColor =
-    colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[3];
 
   React.useEffect(() => {
     if (chatData && !chatData.access) {
@@ -97,13 +93,9 @@ export const Chat = ({ chatId }: { chatId: string }) => {
   );
 
   return (
-    <Flex direction='column' align='center' flex='1' className={cls.Chat}>
+    <Flex direction='column' align='center' flex='1'>
       <ChatHeader interlocutor={chatData?.interlocutor} />
-      <Flex
-        direction='column'
-        bg={chatBackgroundColor}
-        className={cls.MessageContainer}
-      >
+      <Flex direction='column' className={cls.MessageContainer}>
         <MessageList userId={user.id} chatId={Number(chatId)} />
         <MessageInput sendMessage={sendMessage} chatId={chatId} />
       </Flex>

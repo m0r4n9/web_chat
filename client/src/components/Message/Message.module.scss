@@ -16,6 +16,8 @@
 
   height: auto;
 
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-0));
+
   &.isMine {
     align-self: end;
     justify-self: end;
