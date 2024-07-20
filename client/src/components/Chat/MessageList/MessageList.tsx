@@ -17,7 +17,7 @@ export const MessageList = ({
   const messagesElement = React.useRef<HTMLDivElement>(null);
   const scrollPositionRef = React.useRef(0);
   const scrollHeightBeforeFetch = React.useRef(0);
-  const { ref, inView } = useInView({
+  const { ref: triggerFetchRef, inView } = useInView({
     threshold: 0,
   });
 
@@ -48,7 +48,7 @@ export const MessageList = ({
 
   if (isPending) {
     return (
-      <div className={cls.wrapper} ref={messagesElement} key='messages-chat'>
+      <div className={cls.wrapper} ref={messagesElement}>
         <Flex align='center' content='center'>
           <Loader />
         </Flex>
@@ -59,13 +59,13 @@ export const MessageList = ({
   return (
     <ScrollArea.Autosize
       className={cls.wrapper}
-      ref={messagesElement}
+      viewportRef={messagesElement}
       type='auto'
       scrollbars='y'
-      key='messages-chat'
+      scrollbarSize={4}
     >
       <Flex gap='sm' direction='column' className={cls.list}>
-        <div ref={ref}></div>
+        <div ref={triggerFetchRef}></div>
         {isFetchingNextPage && (
           <Flex align='center'>
             <Loader />

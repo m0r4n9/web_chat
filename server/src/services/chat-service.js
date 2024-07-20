@@ -80,7 +80,7 @@ class ChatService {
     const usersId = chatUsers.map((user) => user.userId);
 
     const users = await User.findAll({
-      attributes: ['id', 'username'],
+      attributes: ['id', 'username', 'isOnline'],
       raw: true,
       where: {
         id: {
@@ -170,8 +170,6 @@ class ChatService {
         access: false,
       };
 
-    console.log(user);
-
     const member = await ChatMember.findOne({
       where: {
         chatId,
@@ -180,7 +178,7 @@ class ChatService {
         },
       },
       attributes: ['userId'],
-      raw: true
+      raw: true,
     });
 
     const interlocutor = await User.findByPk(member.userId, {

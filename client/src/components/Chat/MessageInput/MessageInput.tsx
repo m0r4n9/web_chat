@@ -14,28 +14,20 @@ interface MessageInputProps {
 export const MessageInput = React.memo(
   ({ sendMessage, chatId }: MessageInputProps) => {
     const [message, setMessage] = React.useState('');
-    // const [isTyping, setIsTyping] = React.useState(false);
 
     const sendMessageHandler = () => {
       sendMessage(message);
       setMessage('');
     };
 
-    // const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    //   if (event.key === 'Enter' && !event.shiftKey) {
-    //     event.preventDefault();
-    //     sendMessageHandler();
-    //   }
-    // };
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessageHandler();
+      }
+    };
 
-    // React.useEffect(() => {
-    //   socket.on(
-    //     'message:typing',
-    //     (payload: { isTyping: boolean; userId: number }) => {
-    //       setIsTyping(payload.isTyping);
-    //     },
-    //   );
-    // }, []);
+
 
     return (
       <Flex align='center' gap='sm' className={cls.InputMessageContainer}>
@@ -59,7 +51,7 @@ export const MessageInput = React.memo(
             }}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            // onKeyDown={handleKeyDown}
+            onKeyDown={handleKeyDown}
             className={cls.Textarea}
           />
           <Button

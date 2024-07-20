@@ -21,7 +21,7 @@ export const ContactItem = ({ contact, chatId }: ContactItemProps) => {
       className={`${cls.item} ${chatId === Number(contact.chatId) ? cls.active : ''}`}
     >
       <Flex direction='row' align='center' gap='8'>
-        <ColorAvatar username={contact.username} />
+        <ColorAvatar username={contact.username} isOnline={contact.isOnline} />
         <Flex direction='column' align='start'>
           <Text>{contact.username}</Text>
           <Text c={theme.colors.dark[2]} span>

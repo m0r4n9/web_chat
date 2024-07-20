@@ -5,3 +5,30 @@
 
   padding: 0.2rem 0.3rem;
 }
+
+.TypingDot {
+  opacity: 0;
+  font-size: 1rem;
+  animation: loadingFade 2s infinite;
+}
+
+.TypingDot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.TypingDot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.TypingDot:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes loadingFade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}

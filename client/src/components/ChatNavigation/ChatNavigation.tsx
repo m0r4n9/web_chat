@@ -14,9 +14,9 @@ import cls from './ChatNavigation.module.scss';
 export const ChatNavigation = () => {
   const { chatId } = useParams();
   const { user } = useUser();
-
   const { data: contacts } = useGetContactsQuery(user.id);
   const queryClient = useQueryClient();
+
 
   React.useEffect(() => {
     const handleMessage = (message: Message) => {

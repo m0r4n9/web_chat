@@ -42,10 +42,10 @@ initEventHandlers({ io });
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({
-      // force: true
-      // alter: true
-    });
+    // await sequelize.sync({
+    //   // force: true
+    //   alter: true
+    // });
     server.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`));
   } catch (error) {
     console.log(error);

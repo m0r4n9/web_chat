@@ -8,7 +8,9 @@ import { IconMoonStars, IconSun } from '@tabler/icons-react';
 
 export const SwitchTheme = () => {
   const theme = useMantineTheme();
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { colorScheme, setColorScheme } = useMantineColorScheme({
+    keepTransitions: true
+  });
 
   const toggleColorScheme = (value: boolean) => {
     setColorScheme(value ? 'light' : 'dark');

@@ -93,8 +93,8 @@ export const Chat = ({ chatId }: { chatId: string }) => {
   );
 
   return (
-    <Flex direction='column' align='center' flex='1'>
-      <ChatHeader interlocutor={chatData?.interlocutor} />
+    <Flex direction='column' align='center' flex='1' className={cls.Chat}>
+      <ChatHeader />
       <Flex direction='column' className={cls.MessageContainer}>
         <MessageList userId={user.id} chatId={Number(chatId)} />
         <MessageInput sendMessage={sendMessage} chatId={chatId} />

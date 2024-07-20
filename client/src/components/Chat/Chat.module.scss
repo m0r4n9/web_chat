@@ -1,3 +1,8 @@
+.Chat {
+  width: 100%;
+  min-width: 35rem;
+}
+
 .MessageContainer {
   width: 100%;
   height: calc(100svh - var(--header));

@@ -1,12 +1,11 @@
-import Ajv from "ajv";
+import Ajv from 'ajv';
 
-export const ajv = new Ajv()
-
+export const ajv = new Ajv();
 
 export function chatRoom(chatId) {
-    return `chat:${chatId}`;
+  return `chat:${chatId}`;
 }
 
 export function userRoom(userId) {
-    return `user:${userId}`;
+  return `user:${userId}`;
 }

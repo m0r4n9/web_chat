@@ -23,6 +23,7 @@ interface Contact {
   chatId: number;
   username: string;
   message: string;
+  isOnline?: boolean;
 }
 
 interface MessagesChatApiResponse {

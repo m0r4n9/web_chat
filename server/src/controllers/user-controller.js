@@ -1,6 +1,6 @@
 import UserService from '../services/user-service.js';
 
-class UserController {  
+class UserController {
   async getUsers(req, res, next) {
     const userId = req.params.userId;
 
