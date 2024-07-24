@@ -1,3 +1,5 @@
+import 'moment/locale/ru';
+
 import * as React from 'react';
 
 import { QueryProvider, QueryProviderProps } from '@/context/QueryProvider';

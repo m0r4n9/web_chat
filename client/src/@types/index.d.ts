@@ -8,7 +8,8 @@ interface User {
 
 interface Interlocutor {
   username: string;
-  lastVisit?: string;
+  isOnline: boolean;
+  lastPing: string;
 }
 
 interface Message {

@@ -1,5 +1,5 @@
 import { Box, Flex } from '@mantine/core';
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -11,14 +11,36 @@ import { useGetContactsQuery } from '@/utils/api';
 import { ChatHeader } from './ChatHeader/ChatHeader';
 import cls from './ChatNavigation.module.scss';
 
+const updateOnlineStatusContacts = ({
+  queryClient,
+  userId,
+  onlineStatus,
+}: {
+  queryClient: QueryClient;
+  userId: number;
+  onlineStatus: boolean;
+}) => {
+  queryClient.setQueryData(['contacts'], (oldData: Contact[]) => {
+    if (!oldData) return;
+
+    return oldData.map((contact) => {
+      if (contact.id === userId) {
+        return { ...contact, isOnline: onlineStatus };
+      }
+      return contact;
+    });
+  });
+};
+
 export const ChatNavigation = () => {
   const { chatId } = useParams();
   const { user } = useUser();
   const { data: contacts } = useGetContactsQuery(user.id);
   const queryClient = useQueryClient();
 
-
+  // TODO: refactor this. smell no well
   React.useEffect(() => {
+    socket.connect();
     const handleMessage = (message: Message) => {
       queryClient.setQueryData(['contacts'], (oldData: Contact[]) => {
         if (!oldData) return;
@@ -31,10 +53,40 @@ export const ChatNavigation = () => {
       });
     };
 
+    socket.on('user:connected', (userId: number) => {
+      updateOnlineStatusContacts({
+        queryClient,
+        userId,
+        onlineStatus: true,
+      });
+    });
+
+    socket.on('user:disconnected', (userId: number) => {
+      updateOnlineStatusContacts({
+        queryClient,
+        userId,
+        onlineStatus: false,
+      });
+    });
+
     socket.on('message:sent', handleMessage);
 
     return () => {
       socket.off('message:sent', handleMessage);
+      socket.off('user:connected', (userId: number) => {
+        updateOnlineStatusContacts({
+          queryClient,
+          userId,
+          onlineStatus: true,
+        });
+      });
+      socket.off('user:disconnected', (userId: number) => {
+        updateOnlineStatusContacts({
+          queryClient,
+          userId,
+          onlineStatus: false,
+        });
+      });
       if (socket && socket.connected) socket.disconnect();
     };
   }, [queryClient]);

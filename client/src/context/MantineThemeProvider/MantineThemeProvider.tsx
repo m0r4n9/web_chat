@@ -12,7 +12,7 @@ export const MantineThemeProvider = ({
   ...props
 }: MantineThemeProviderProps) => {
   return (
-    <MantineProvider theme={theme} defaultColorScheme='light' {...props}>
+    <MantineProvider theme={theme} defaultColorScheme='dark' {...props}>
       {children}
     </MantineProvider>
   );

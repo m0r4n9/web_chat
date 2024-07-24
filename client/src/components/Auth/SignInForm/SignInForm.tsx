@@ -42,6 +42,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
       });
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={cls.form}>
       <Divider label='Авторизация' labelPosition='center' my='lg' />
@@ -66,7 +67,7 @@ export const SignInForm = ({ toggleStage }: SignInFormProps) => {
       />
 
       <Group gap='md' justify='space-between'>
-        {signIn.isError && <div>{signIn.error.response?.data.message}</div>}
+        {/* {signIn.isError && <div>{signIn.error.response?.data.message}</div>} */}
         <Anchor
           component='button'
           type='button'

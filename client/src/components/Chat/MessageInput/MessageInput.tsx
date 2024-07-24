@@ -27,8 +27,6 @@ export const MessageInput = React.memo(
       }
     };
 
-
-
     return (
       <Flex align='center' gap='sm' className={cls.InputMessageContainer}>
         <Flex align='center' gap='sm' className={cls.MessageInput}>

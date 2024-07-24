@@ -182,7 +182,7 @@ class ChatService {
     });
 
     const interlocutor = await User.findByPk(member.userId, {
-      attributes: ['username'],
+      attributes: ['username', 'lastPing'],
       raw: true,
     });
 

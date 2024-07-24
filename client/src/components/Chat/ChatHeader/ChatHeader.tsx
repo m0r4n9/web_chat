@@ -1,4 +1,5 @@
 import { Avatar, Flex, Group } from '@mantine/core';
+import moment from 'moment';
 import * as React from 'react';
 
 import { socket } from '@/api';
@@ -13,7 +14,7 @@ const Typing = () => {
   return (
     <Group gap='0' className={cls.Typing}>
       Печатает
-      <div >
+      <div>
         <span className={cls.TypingDot}>.</span>
         <span className={cls.TypingDot}>.</span>
         <span className={cls.TypingDot}>.</span>
@@ -23,7 +24,21 @@ const Typing = () => {
 };
 
 export const ChatHeader = ({ interlocutor }: ChatHeaderProps) => {
-  const [isTyping, setIsTyping] = React.useState(true);
+  const [isTyping, setIsTyping] = React.useState(false);
+  const [timeAgo, setTimeAgo] = React.useState('');
+
+  React.useEffect(() => {
+    const updateTimeAgo = () =>
+      setTimeAgo(moment(interlocutor?.lastPing).locale('ru').fromNow());
+
+    updateTimeAgo();
+
+    const interval = setInterval(updateTimeAgo, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [interlocutor?.lastPing]);
 
   React.useEffect(() => {
     socket.on(
@@ -40,7 +55,15 @@ export const ChatHeader = ({ interlocutor }: ChatHeaderProps) => {
         <Avatar name={interlocutor?.username} color='initials' />
         <Flex direction='column'>
           <p>{interlocutor?.username}</p>
-          {isTyping ? <Typing /> : <span>Была в сети недавно</span>}
+          {interlocutor?.isOnline ? (
+            isTyping ? (
+              <Typing />
+            ) : (
+              <span>Online</span>
+            )
+          ) : (
+            <span>{timeAgo}</span>
+          )}
         </Flex>
       </Flex>
     </Flex>

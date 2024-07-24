@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Modal, useMantineTheme } from '@mantine/core';
+import { Box, Button, Flex, Modal } from '@mantine/core';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,9 +71,6 @@ const ModalUsers = ({ users }: { users?: UserOmit[] }) => {
 export const CreateChat = () => {
   const { user } = useUser();
   const { data: users } = useGetUnmessagedUsers(user.id);
-  const theme = useMantineTheme();
-
-  console.log('@', theme);
 
   return (
     <Flex

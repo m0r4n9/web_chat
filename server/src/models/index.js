@@ -27,6 +27,10 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    lastPing: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    }
   },
   {
     tableName: 'users',

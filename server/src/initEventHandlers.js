@@ -5,6 +5,7 @@ import EventChat from './events/Chat.js';
 import EventUsers from './events/Users.js';
 import { ChatMember, User } from './models/index.js';
 import { chatRoom, userRoom } from './utils.js';
+import Sequelize from 'sequelize';
 
 export function initEventHandlers({ io }) {
   io.use(async (socket, next) => {
@@ -34,25 +35,28 @@ export function initEventHandlers({ io }) {
     }
 
     let chats;
-
     try {
       chats = await chatService.getUserChats(socket.user.id);
     } catch (error) {
       return next(error);
     }
+
     chats.forEach((chatId) => {
       socket.join(`chat:${chatId}`);
     });
+
+    socket.join(userRoom(socket.user.id));
+
     next();
   });
 
   io.on('connection', async (socket) => {
+    console.log('User connected: ', socket.user.id);
     // Chats
     socket.on('chat:list', async (callback) =>
       EventChat.list(socket, callback),
     );
     socket.on('chat:join', async () => EventChat.join());
-
 
     // Users
     socket.on('users:get', async (userId, callback) =>
@@ -67,13 +71,11 @@ export function initEventHandlers({ io }) {
       EventMessages.typing(socket, payload),
     );
 
-    socket.on('disconnect', async () => {
+    socket.on('disconnect', async (reason) => {
+      console.log('Reason: ', reason);
       setTimeout(async () => {
         const sockets = await io.in(userRoom(socket.user.id)).fetchSockets();
         const hasReconnected = sockets.length > 0;
-
-        console.log(sockets);
-        console.log(hasReconnected);
 
         if (!hasReconnected) {
           const user = await User.findByPk(socket.user.id);
@@ -81,7 +83,7 @@ export function initEventHandlers({ io }) {
             isOnline: false,
           });
 
-          console.log('disconnected');
+          console.log('User disconnected: ', socket.user.id);
 
           io.emit('user:disconnected', socket.user.id);
         }
@@ -106,12 +108,16 @@ export function initEventHandlers({ io }) {
     const user = await User.findByPk(socket.user.id);
 
     if (user) {
-      const wasOnline = user.dataValues.idOnline;
-
+      const wasOnline = user.dataValues.isOnline;
       if (!wasOnline) {
         await user.update({
           isOnline: true,
+          lastPing: Sequelize.fn('NOW'),
         });
+
+        socket
+          .to(chatRoom(socket.user.id))
+          .emit('user:connected', socket.user.id);
       }
     }
   });

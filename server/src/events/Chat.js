@@ -37,7 +37,6 @@ class EventChat {
       },
     });
 
-    console.log('Users: ', users);
 
     const userMap = {};
     users.forEach((user) => {
@@ -64,7 +63,6 @@ class EventChat {
         chatId: chatUsers[i].chatId,
       });
     }
-    console.log('Result: ', result);
     callback(result);
   }
 
